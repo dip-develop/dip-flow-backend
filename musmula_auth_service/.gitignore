@@ -1,0 +1,4 @@
+.dart_tool/
+*.lock
+*.g.dart
+lib/src/generated/

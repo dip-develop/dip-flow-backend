@@ -1,0 +1,31 @@
+version: '3.5'
+
+services:
+  # db_auth:
+  #   container_name: db_auth
+  #   ports:
+  #     - '5432:5432'
+  #   environment:
+  #     - POSTGRES_USER=admin
+  #     - POSTGRES_PASSWORD=root
+  #     - POSTGRES_DB=postgres
+  #   image: postgres:15.2-alpine
+  #   volumes:
+  #     - db_data:/var/lib/postgresql/data
+  service_auth:
+    container_name: service_auth
+    ports:
+      - '8080:8080'
+    environment:
+      - PORT=8080
+#      - DB_USERNAME=admin
+#      - DB_PASSWORD=root
+#      - DB_HOST=127.0.0.1
+#      - DB_PORT=5432
+#      - DB_NAME=postgres
+#    depends_on:
+#      - db_auth
+    build: ./musmula_auth_service
+
+# volumes:
+#   db_data: {}

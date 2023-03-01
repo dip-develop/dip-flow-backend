@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package auth;
+
+service Auth {
+  rpc SignInByEmail (SignInEmailRequest) returns (AuthReply) {}
+}
+
+message SignInEmailRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message AuthReply {
+  string accessToken = 1;
+  string refreshToken = 2;
+}
