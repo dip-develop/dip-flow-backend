@@ -18,14 +18,11 @@ services:
       - '8080:8080'
     environment:
       - PORT=8080
-#      - DB_USERNAME=admin
-#      - DB_PASSWORD=root
-#      - DB_HOST=127.0.0.1
-#      - DB_PORT=5432
-#      - DB_NAME=postgres
-#    depends_on:
-#      - db_auth
+      - DB_NAME=service_auth_database
+      - DB_DIRECTORY=/app/db
     build: ./musmula_auth_service
+    volumes:
+      - auth_db_data:/app/db
 
-# volumes:
-#   db_data: {}
+volumes:
+   auth_db_data: {}

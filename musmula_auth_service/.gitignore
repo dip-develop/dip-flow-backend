@@ -2,3 +2,4 @@
 *.lock
 *.g.dart
 lib/src/generated/
+bin/server.config.dart
