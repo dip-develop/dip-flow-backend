@@ -4,11 +4,23 @@ package auth;
 
 service Auth {
   rpc SignInByEmail (SignInEmailRequest) returns (AuthReply) {}
+  rpc SignUpByEmail (SignUpEmailRequest) returns (AuthReply) {}
+  rpc RefreshToken (RefreshTokenRequest) returns (AuthReply) {}
 }
 
 message SignInEmailRequest {
   string email = 1;
   string password = 2;
+}
+
+message SignUpEmailRequest {
+  string email = 1;
+  string password = 2;
+  string name = 3;
+}
+
+message RefreshTokenRequest {
+  string token = 1;
 }
 
 message AuthReply {
