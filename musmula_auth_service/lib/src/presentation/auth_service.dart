@@ -5,7 +5,8 @@ import 'package:grpc/grpc.dart';
 
 import '../domain/exceptions/auth_exception.dart';
 import '../domain/interfaces/interfaces.dart';
-import '../generated/auth.pbgrpc.dart';
+import '../generated/auth_models.pb.dart';
+import '../generated/auth_service.pbgrpc.dart';
 
 class AuthService extends AuthServiceBase {
   final _usersUseCase = GetIt.I<UsersUseCase>();

@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"protoc": {
+			"path": "protoc",
+			"options": [
+				"--proto_path=protos",
+				"--java_out=/lib/src/generated"
+			]
+		}
+	}
+}

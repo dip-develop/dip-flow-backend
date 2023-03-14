@@ -33,7 +33,6 @@ class UsersUseCaseImpl implements UsersUseCase {
       if (_getPasswordHash(password) != auth.password) {
         return Future.error(AuthException.wrongEmailData());
       }
-
       return _dataBaseRepository
           .getSessionsByUserId(auth.userId)
           .then((value) => _dataBaseRepository.putSession(SessionModel(
@@ -106,6 +105,12 @@ class UsersUseCaseImpl implements UsersUseCase {
         jwtId: session.id.toString(),
         secret: _secretAccessJWT);
   }
+
+  @override
+  Future<void> deleteExpiredSessions() => _dataBaseRepository
+      .getExpiredSessions()
+      .then((sessions) => _dataBaseRepository
+          .deleteSessions(sessions.map((e) => e.id!).toList()));
 
   String _generateToken(
       {required DateTime dateCreated,

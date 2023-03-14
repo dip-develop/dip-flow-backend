@@ -6,6 +6,8 @@ abstract class UsersUseCase {
   Future<SessionModel> signUpByEmail(
       {required String name, required String email, required String password});
 
+  Future<void> deleteExpiredSessions();
+
   bool checkRefreshToken(String token);
   bool checkAccessToken(String token);
   String generateRefreshToken(SessionModel session);

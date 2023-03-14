@@ -2,13 +2,16 @@ FROM robojones/protoc-dart:20.0.1 AS build
 
 WORKDIR /app
 
-COPY musmula_auth_service/ ./
+COPY musmula_gateway_service/ ./
 RUN dart pub get
 RUN mkdir lib/src/generated/
 COPY protos ./protos
 RUN protoc --dart_out=grpc:lib/src/generated -Iprotos \
-    protos/auth_service.proto \
-    protos/auth_models.proto
+    protos/gate_service.proto \
+    protos/auth_models.proto \
+    protos/google/api/annotations.proto \
+    protos/google/api/http.proto \
+    protos/google/protobuf/descriptor.proto
 RUN dart run build_runner build -d
 RUN dart compile exe bin/server.dart -o bin/server
 

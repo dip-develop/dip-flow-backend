@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package gate;
+
+import "auth_models.proto";
+import "google/api/annotations.proto";
+
+service GateService {
+  rpc SignInByEmail (auth.models.SignInEmailRequest) returns (auth.models.AuthReply) {
+    option (google.api.http) = {
+      post: "/auth/sign_in"
+      body: "AuthReply"
+    };
+  }
+  rpc SignUpByEmail (auth.models.SignUpEmailRequest) returns (auth.models.AuthReply) {
+    option (google.api.http) = {
+      post: "/auth/sign_up"
+      body: "AuthReply"
+    };
+  }
+  rpc RefreshToken (auth.models.RefreshTokenRequest) returns (auth.models.AuthReply) {
+    option (google.api.http) = {
+      post: "/auth/refresh"
+      body: "AuthReply"
+    };
+  }
+}

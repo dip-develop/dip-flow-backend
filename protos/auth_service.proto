@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package auth;
+
+import "auth_models.proto";
+
+service AuthService {
+  rpc SignInByEmail (auth.models.SignInEmailRequest) returns (auth.models.AuthReply) {}
+  rpc SignUpByEmail (auth.models.SignUpEmailRequest) returns (auth.models.AuthReply) {}
+  rpc RefreshToken (auth.models.RefreshTokenRequest) returns (auth.models.AuthReply) {}
+}

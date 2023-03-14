@@ -1,31 +1,53 @@
 version: '3.5'
 
 services:
-  # db_auth:
-  #   container_name: db_auth
-  #   ports:
-  #     - '5432:5432'
-  #   environment:
-  #     - POSTGRES_USER=admin
-  #     - POSTGRES_PASSWORD=root
-  #     - POSTGRES_DB=postgres
-  #   image: postgres:15.2-alpine
-  #   volumes:
-  #     - db_data:/var/lib/postgresql/data
+  service_gateway:
+    container_name: service_gateway
+    ports:
+      - '${GATEWAY_PORT}:${GATEWAY_PORT}'
+    env_file:
+      - .env
+    environment:
+      - PORT=$GATEWAY_PORT
+      - AUTH_IP=$AUTH_IP
+      - AUTH_PORT=$AUTH_PORT
+      - TIME_TRACKING_PORT=$TIME_TRACKING_PORT
+      - TIME_TRACKING_IP=$TIME_TRACKING_IP
+    build: 
+      dockerfile: ./musmula_gateway_service/Dockerfile
+      context: '.'
+    restart: always
   service_auth:
     container_name: service_auth
     ports:
-      - '8080:8080'
-    expose:
-      - 8080
+      - '${AUTH_PORT}:${AUTH_PORT}'
     environment:
-      - PORT=8080
+      - PORT=$AUTH_PORT
       - DB_NAME=service_auth_database
       - DB_DIRECTORY=/app/db
-    build: ./musmula_auth_service
+    build:
+      dockerfile: ./musmula_auth_service/Dockerfile
+      context: '.'
     volumes:
       - auth_db_data:/app/db
     restart: always
+  service_time_tracking:
+    container_name: service_time_tracking
+    ports:
+      - '${TIME_TRACKING_PORT}:${TIME_TRACKING_PORT}'
+    environment:
+      - PORT=$TIME_TRACKING_PORT
+      - AUTH_IP=$AUTH_IP
+      - AUTH_PORT=$AUTH_PORT
+      - DB_NAME=service_time_tracking_database
+      - DB_DIRECTORY=/app/db
+    build:
+      dockerfile: ./musmula_time_tracking_service/Dockerfile
+      context: '.'
+    volumes:
+      - time_tracking_db_data:/app/db
+    restart: always
 
 volumes:
-   auth_db_data: {}
+  auth_db_data: {}
+  time_tracking_db_data: {}
