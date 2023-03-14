@@ -32,6 +32,7 @@ COPY protos ./protos
 RUN protoc --dart_out=grpc:lib/src/generated -Iprotos \
     protos/gate_service.proto \
     protos/auth_models.proto \
+    protos/auth_service.proto \
     protos/google/api/annotations.proto \
     protos/google/api/http.proto \
     protos/google/protobuf/descriptor.proto
