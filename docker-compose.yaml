@@ -2,6 +2,7 @@ version: '3.5'
 
 services:
   service_gateway:
+
     container_name: service_gateway
     ports:
       - '${GATEWAY_PORT}:${GATEWAY_PORT}'
@@ -9,14 +10,17 @@ services:
       - .env
     environment:
       - PORT=$GATEWAY_PORT
-      - AUTH_IP=$AUTH_IP
+      - AUTH_IP=service_auth
       - AUTH_PORT=$AUTH_PORT
       - TIME_TRACKING_PORT=$TIME_TRACKING_PORT
       - TIME_TRACKING_IP=$TIME_TRACKING_IP
-    build: 
+    build:
       dockerfile: ./musmula_gateway_service/Dockerfile
       context: '.'
-    restart: always
+    #restart: always
+    networks:
+      - network
+
   service_auth:
     container_name: service_auth
     ports:
@@ -30,7 +34,10 @@ services:
       context: '.'
     volumes:
       - auth_db_data:/app/db
-    restart: always
+    #restart: always
+    networks:
+      - network
+
   service_time_tracking:
     container_name: service_time_tracking
     ports:
@@ -46,8 +53,14 @@ services:
       context: '.'
     volumes:
       - time_tracking_db_data:/app/db
-    restart: always
+    #restart: always
+    networks:
+      - network
 
 volumes:
   auth_db_data: {}
   time_tracking_db_data: {}
+
+networks:
+  network:
+    driver: bridge
