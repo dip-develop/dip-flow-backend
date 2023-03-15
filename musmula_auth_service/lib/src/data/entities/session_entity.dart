@@ -1,21 +1,25 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
 import '../../domain/models/models.dart';
 
-part 'session_entity.g.dart';
+//part 'session_entity.g.dart';
 
-@collection
+@Entity()
 class SessionEntity {
-  final Id id;
+  @Id()
+  int id;
   final int userId;
+  @Property(type: PropertyType.date)
   final DateTime dateCreated;
+  @Property(type: PropertyType.date)
   final DateTime dateExpired;
 
-  const SessionEntity(
-      {this.id = Isar.autoIncrement,
-      required this.userId,
-      required this.dateCreated,
-      required this.dateExpired});
+  SessionEntity({
+    this.id = 0,
+    required this.userId,
+    required this.dateCreated,
+    required this.dateExpired,
+  });
 
   SessionModel toModel() => SessionModel((p0) => p0
     ..id = id
@@ -24,8 +28,9 @@ class SessionEntity {
     ..dateExpired = dateExpired);
 
   factory SessionEntity.fromModel(SessionModel model) => SessionEntity(
-      id: model.id ?? Isar.autoIncrement,
-      userId: model.userId,
-      dateCreated: model.dateCreated,
-      dateExpired: model.dateExpired);
+        id: model.id ?? 0,
+        userId: model.userId,
+        dateCreated: model.dateCreated,
+        dateExpired: model.dateExpired,
+      );
 }

@@ -18,4 +18,6 @@ abstract class DataBaseRepository {
   Future<EmailAuthModel?> getEmailAuth(int id);
   Future<EmailAuthModel?> getAuthByEmail(String email);
   Future<void> deleteEmailAuth(int id);
+
+  void dispose();
 }

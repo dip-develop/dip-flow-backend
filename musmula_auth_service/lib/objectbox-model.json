@@ -1,0 +1,134 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:2340198465594571732",
+      "lastPropertyId": "4:8350933442784770571",
+      "name": "SessionEntity",
+      "properties": [
+        {
+          "id": "1:3667494716701967190",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4572872307460652610",
+          "name": "userId",
+          "type": 6
+        },
+        {
+          "id": "3:1854790215859902453",
+          "name": "dateCreated",
+          "type": 10
+        },
+        {
+          "id": "4:8350933442784770571",
+          "name": "dateExpired",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:2507696998683691206",
+      "lastPropertyId": "3:4634169596380432044",
+      "name": "UserEntity",
+      "properties": [
+        {
+          "id": "1:8106288732655613198",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:758763757778613346",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:4634169596380432044",
+          "name": "dateCreated",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:9096991638018609193",
+      "lastPropertyId": "5:4040272918993594484",
+      "name": "EmailAuthEntity",
+      "properties": [
+        {
+          "id": "1:3269212144904149108",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:127700726136604335",
+          "name": "userId",
+          "type": 6
+        },
+        {
+          "id": "3:8676060845578864761",
+          "name": "email",
+          "type": 9
+        },
+        {
+          "id": "4:8265988273679554397",
+          "name": "password",
+          "type": 9
+        },
+        {
+          "id": "5:4040272918993594484",
+          "name": "dateCreated",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:5535583809853951695",
+      "lastPropertyId": "4:3391274638161701285",
+      "name": "OpenAuthEntity",
+      "properties": [
+        {
+          "id": "1:3848604587899372504",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:9000785692045325166",
+          "name": "userId",
+          "type": 6
+        },
+        {
+          "id": "3:8534782181123231437",
+          "name": "identifier",
+          "type": 9
+        },
+        {
+          "id": "4:3391274638161701285",
+          "name": "dateCreated",
+          "type": 10
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "4:5535583809853951695",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

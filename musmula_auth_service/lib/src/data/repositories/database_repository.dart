@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:injectable/injectable.dart';
-import 'package:isar/isar.dart';
 
+import '../../../objectbox.g.dart';
 import '../../domain/models/auth_model.dart';
 import '../../domain/models/session_model.dart';
 import '../../domain/models/user_model.dart';
@@ -11,85 +11,90 @@ import '../entities/entities.dart';
 
 @Singleton(as: DataBaseRepository)
 class DataBaseRepositoryImpl implements DataBaseRepository {
-  late final Isar _db;
+  late final Store _db;
   @override
   Future<void> init() {
-    final name = Platform.environment['DB_NAME'];
     final directory = Platform.environment['DB_DIRECTORY'];
-    return Isar.open([
-      UserEntitySchema,
-      EmailAuthEntitySchema,
-      OpenAuthEntitySchema,
-      SessionEntitySchema
-    ], name: name ?? 'default', directory: directory)
-        .then((value) => _db = value);
+    _db = openStore(
+      directory: directory,
+    );
+    return Future.value();
   }
 
   @override
-  Future<UserModel?> getUser(int userId) =>
-      _db.userEntitys.get(userId).then((value) => value?.toModel());
+  Future<UserModel?> getUser(int id) =>
+      Future.value(_db.box<UserEntity>().get(id)?.toModel());
 
   @override
-  Future<UserModel> putUser(UserModel user) =>
-      _db.writeTxn(() => _db.userEntitys
-          .put(UserEntity.fromModel(user))
-          .then((value) => user.rebuild((p0) => p0..id = value)));
+  Future<UserModel> putUser(UserModel user) => _db
+      .box<UserEntity>()
+      .putAsync(UserEntity.fromModel(user))
+      .then((value) => user.rebuild((p0) => p0..id = value));
 
   @override
-  Future<void> deleteUser(int userId) =>
-      _db.writeTxn(() => _db.sessionEntitys.delete(userId));
+  Future<void> deleteUser(int id) =>
+      Future.value(_db.box<UserEntity>().remove(id)).then((_) {});
 
   @override
-  Future<SessionModel?> getSession(int sessionId) =>
-      _db.sessionEntitys.get(sessionId).then((value) => value?.toModel());
+  Future<SessionModel?> getSession(int id) =>
+      Future.value(_db.box<SessionEntity>().get(id)?.toModel());
 
   @override
-  Future<List<SessionModel>> getSessionsByUserId(int userId) =>
-      _db.sessionEntitys
-          .filter()
-          .userIdEqualTo(userId)
-          .findAll()
-          .then((value) => value.map((e) => e.toModel()).toList());
-
-  @override
-  Future<List<SessionModel>> getExpiredSessions() => _db.sessionEntitys
-      .filter()
-      .dateExpiredLessThan(DateTime.now().toUtc())
-      .findAll()
+  Future<List<SessionModel>> getSessionsByUserId(int id) => Future.value(_db
+          .box<SessionEntity>()
+          .query(SessionEntity_.userId.equals(id))
+          .build()
+          .find())
       .then((value) => value.map((e) => e.toModel()).toList());
 
   @override
-  Future<SessionModel> putSession(SessionModel session) =>
-      _db.writeTxn(() => _db.sessionEntitys
-          .put(SessionEntity.fromModel(session))
-          .then((value) => session.rebuild((p0) => p0..id = value)));
+  Future<List<SessionModel>> getExpiredSessions() => Future.value(_db
+          .box<SessionEntity>()
+          .query(SessionEntity_.dateExpired
+              .lessThan(DateTime.now().toUtc().millisecondsSinceEpoch))
+          .build()
+          .find())
+      .then((value) => value.map((e) => e.toModel()).toList());
+
+  @override
+  Future<SessionModel> putSession(SessionModel session) => _db
+      .box<SessionEntity>()
+      .putAsync(SessionEntity.fromModel(session))
+      .then((value) => session.rebuild((p0) => p0..id = value));
 
   @override
   Future<void> deleteSession(int id) =>
-      _db.writeTxn(() => _db.userEntitys.delete(id));
+      Future.value(_db.box<SessionEntity>().remove(id)).then((_) {});
 
   @override
   Future<void> deleteSessions(List<int> ids) =>
-      _db.writeTxn(() => _db.sessionEntitys.deleteAll(ids));
+      Future.value(_db.box<SessionEntity>().removeMany(ids)).then((_) {});
 
   @override
-  Future<EmailAuthModel?> getAuthByEmail(String email) => _db.emailAuthEntitys
-      .filter()
-      .emailEqualTo(email)
+  Future<EmailAuthModel?> getAuthByEmail(String email) => Future.value(_db
+      .box<EmailAuthEntity>()
+      .query(EmailAuthEntity_.email.equals(email))
+      .build()
       .findFirst()
-      .then((value) => value?.toModel());
+      ?.toModel());
 
   @override
-  Future<void> deleteEmailAuth(int authId) =>
-      _db.writeTxn(() => _db.emailAuthEntitys.delete(authId));
+  Future<void> deleteEmailAuth(int id) =>
+      Future.value(_db.box<EmailAuthEntity>().remove(id)).then((_) {});
 
   @override
-  Future<EmailAuthModel?> getEmailAuth(int authId) =>
-      _db.emailAuthEntitys.get(authId).then((value) => value?.toModel());
+  Future<EmailAuthModel?> getEmailAuth(int id) =>
+      Future.value(_db.box<EmailAuthEntity>().get(id)?.toModel());
 
   @override
-  Future<EmailAuthModel> putEmailAuth(EmailAuthModel auth) =>
-      _db.writeTxn(() => _db.emailAuthEntitys
-          .put(EmailAuthEntity.fromModel(auth))
-          .then((value) => auth.rebuild((p0) => p0..id = value)));
+  Future<EmailAuthModel> putEmailAuth(EmailAuthModel auth) => _db
+      .box<EmailAuthEntity>()
+      .putAsync(EmailAuthEntity.fromModel(auth))
+      .then((value) => auth.rebuild((p0) => p0..id = value));
+
+  @override
+  @disposeMethod
+  void dispose() {
+    _db.close();
+  }
 }

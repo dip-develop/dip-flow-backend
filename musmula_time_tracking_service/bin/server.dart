@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:get_it/get_it.dart';
 import 'package:grpc/grpc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:isar/isar.dart';
 
 import 'server.config.dart';
 
@@ -14,7 +13,6 @@ void configureDependencies() => getIt.init();
 
 void main(List<String> args) async {
   print('Database initialization');
-  await Isar.initializeIsarCore(download: true);
   print('Dependency initialization');
   configureDependencies();
 

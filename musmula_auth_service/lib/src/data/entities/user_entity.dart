@@ -1,17 +1,21 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
 import '../../domain/models/models.dart';
 
-part 'user_entity.g.dart';
+//part 'user_entity.g.dart';
 
-@collection
+@Entity()
 class UserEntity {
-  final Id id;
+  int id;
   final String? name;
+  @Property(type: PropertyType.date)
   final DateTime dateCreated;
 
-  const UserEntity(
-      {this.id = Isar.autoIncrement, this.name, required this.dateCreated});
+  UserEntity({
+    this.id = 0,
+    this.name,
+    required this.dateCreated,
+  });
 
   UserModel toModel() => UserModel((p0) => p0
     ..id = id
@@ -19,7 +23,7 @@ class UserEntity {
     ..dateCreated = dateCreated);
 
   factory UserEntity.fromModel(UserModel model) => UserEntity(
-        id: model.id ?? Isar.autoIncrement,
+        id: model.id ?? 0,
         name: model.name,
         dateCreated: model.dateCreated,
       );

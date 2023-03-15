@@ -1,26 +1,29 @@
-import 'package:isar/isar.dart';
+import 'package:objectbox/objectbox.dart';
 
 import '../../domain/models/models.dart';
 
-part 'auth_entity.g.dart';
+//part 'auth_entity.g.dart';
 
-@collection
+@Entity()
 class EmailAuthEntity implements AuthEntity {
+  @Id()
   @override
-  final Id id;
+  int id;
   @override
   final int userId;
   final String email;
   final String password;
+  @Property(type: PropertyType.date)
   @override
   final DateTime dateCreated;
 
-  const EmailAuthEntity(
-      {this.id = Isar.autoIncrement,
-      required this.userId,
-      required this.email,
-      required this.password,
-      required this.dateCreated});
+  EmailAuthEntity({
+    this.id = 0,
+    required this.userId,
+    required this.email,
+    required this.password,
+    required this.dateCreated,
+  });
 
   EmailAuthModel toModel() => EmailAuthModel((p0) => p0
     ..id = id
@@ -30,7 +33,7 @@ class EmailAuthEntity implements AuthEntity {
     ..dateCreated = dateCreated);
 
   factory EmailAuthEntity.fromModel(EmailAuthModel model) => EmailAuthEntity(
-        id: model.id ?? Isar.autoIncrement,
+        id: model.id ?? 0,
         userId: model.userId,
         email: model.email,
         password: model.password,
@@ -38,30 +41,34 @@ class EmailAuthEntity implements AuthEntity {
       );
 }
 
-@collection
+@Entity()
 class OpenAuthEntity implements AuthEntity {
+  @Id()
   @override
-  final Id id;
+  int id;
   @override
   final int userId;
   final String identifier;
+  @Property(type: PropertyType.date)
   @override
   final DateTime dateCreated;
 
-  const OpenAuthEntity(
-      {this.id = Isar.autoIncrement,
-      required this.userId,
-      required this.identifier,
-      required this.dateCreated});
+  OpenAuthEntity({
+    this.id = 0,
+    required this.userId,
+    required this.identifier,
+    required this.dateCreated,
+  });
 }
 
 abstract class AuthEntity {
-  final Id id;
+  final int id;
   final int userId;
   final DateTime dateCreated;
 
-  const AuthEntity(
-      {this.id = Isar.autoIncrement,
-      required this.userId,
-      required this.dateCreated});
+  const AuthEntity({
+    this.id = 0,
+    required this.userId,
+    required this.dateCreated,
+  });
 }

@@ -39,6 +39,7 @@ RUN protoc --dart_out=grpc:lib/src/generated -Iprotos \
 RUN dart run build_runner build -d
 RUN dart compile exe bin/server.dart -o bin/server
 
-FROM ubuntu:latest
+FROM scratch
+COPY --from=build /runtime/ /
 COPY --from=build /app/bin/server /app/bin/
 CMD ["/app/bin/server"]

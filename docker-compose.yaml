@@ -27,7 +27,6 @@ services:
       - '${AUTH_PORT}:${AUTH_PORT}'
     environment:
       - PORT=$AUTH_PORT
-      - DB_NAME=service_auth_database
       - DB_DIRECTORY=/app/db
     build:
       dockerfile: ./musmula_auth_service/Dockerfile
@@ -46,7 +45,6 @@ services:
       - PORT=$TIME_TRACKING_PORT
       - AUTH_IP=$AUTH_IP
       - AUTH_PORT=$AUTH_PORT
-      - DB_NAME=service_time_tracking_database
       - DB_DIRECTORY=/app/db
     build:
       dockerfile: ./musmula_time_tracking_service/Dockerfile

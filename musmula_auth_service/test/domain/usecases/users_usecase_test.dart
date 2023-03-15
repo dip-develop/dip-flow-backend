@@ -1,4 +1,3 @@
-import 'package:isar/isar.dart';
 import 'package:musmula_auth_service/src/data/repositories/database_repository.dart';
 import 'package:musmula_auth_service/src/domain/interfaces/interfaces.dart';
 import 'package:musmula_auth_service/src/domain/models/session_model.dart';
@@ -7,9 +6,6 @@ import 'package:musmula_auth_service/src/domain/usecases/usecases.dart';
 import 'package:test/test.dart';
 
 void main() {
-  /* setUp(() async {
-    await Isar.initializeIsarCore(download: true);
-  }); */
   group('Users UseCase', () {
     test('Generate and check token', () async {
       final DataBaseRepository dataBaseRepository = DataBaseRepositoryImpl();

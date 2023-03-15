@@ -32,9 +32,12 @@ COPY protos ./protos
 RUN protoc --dart_out=grpc:lib/src/generated -Iprotos \
     protos/auth_service.proto \
     protos/auth_models.proto
+RUN bash -c 'bash <(curl -s https://raw.githubusercontent.com/objectbox/objectbox-dart/main/install.sh) --sync --quiet'
 RUN dart run build_runner build -d
 RUN dart compile exe bin/server.dart -o bin/server
 
 FROM ubuntu:latest
+WORKDIR "/app"
 COPY --from=build /app/bin/server /app/bin/
+COPY --from=build /app/lib/libobjectbox.so /app/lib/
 CMD ["/app/bin/server"]

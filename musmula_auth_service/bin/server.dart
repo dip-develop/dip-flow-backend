@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:get_it/get_it.dart';
 import 'package:grpc/grpc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:isar/isar.dart';
 import 'package:musmula_auth_service/src/presentation/auth_service.dart';
 
 import 'server.config.dart';
@@ -15,7 +14,6 @@ Future<void> configureDependencies() => getIt.init();
 
 void main(List<String> args) async {
   print('Database initialization');
-  await Isar.initializeIsarCore(download: true);
   print('Dependency initialization');
   await configureDependencies();
 
