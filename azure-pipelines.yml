@@ -8,6 +8,6 @@ steps:
 - task: SSH@0
   inputs:
     sshEndpoint: 'DipDev Server'
-    runOptions: 'inline'
-    inline: 'inline: ''cd workspace && cd musmula_backend && git reset --hard HEAD && git checkout main && git pull origin main && docker-compose up -d --build && exit'''
+    runOptions: 'commands'
+    commands: 'cd workspace && cd musmula_backend && git reset --hard HEAD && git checkout main && git pull origin main && docker-compose up -d --build && exit'
     readyTimeout: '20000'

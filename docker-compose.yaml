@@ -9,7 +9,7 @@ services:
       - .env
     environment:
       - PORT=$GATEWAY_PORT
-      - AUTH_IP=$AUTH_IP
+      - AUTH_IP=service_auth
       - AUTH_PORT=$AUTH_PORT
       - TIME_TRACKING_PORT=$TIME_TRACKING_PORT
       - TIME_TRACKING_IP=$TIME_TRACKING_IP
@@ -37,7 +37,7 @@ services:
       - '${TIME_TRACKING_PORT}:${TIME_TRACKING_PORT}'
     environment:
       - PORT=$TIME_TRACKING_PORT
-      - AUTH_IP=$AUTH_IP
+      - AUTH_IP=service_auth
       - AUTH_PORT=$AUTH_PORT
       - DB_NAME=service_time_tracking_database
       - DB_DIRECTORY=/app/db
