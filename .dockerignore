@@ -2,7 +2,6 @@
 .dockerignore
 azure-pipelines.yml
 README.md
-*.code-workspace
 .vscode/
 .env
 **/Dockerfile
