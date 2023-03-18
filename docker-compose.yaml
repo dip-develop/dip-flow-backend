@@ -12,12 +12,12 @@ services:
       - PORT=$GATEWAY_PORT
       - AUTH_IP=service_auth
       - AUTH_PORT=$AUTH_PORT
+      - TIME_TRACKING_IP=service_time_tracking
       - TIME_TRACKING_PORT=$TIME_TRACKING_PORT
-      - TIME_TRACKING_IP=$TIME_TRACKING_IP
     build:
       dockerfile: ./musmula_gateway_service/Dockerfile
       context: '.'
-    #restart: always
+    restart: always
     networks:
       - network
 
@@ -33,7 +33,7 @@ services:
       context: '.'
     volumes:
       - auth_db_data:/app/db
-    #restart: always
+    restart: always
     networks:
       - network
 
@@ -43,7 +43,7 @@ services:
       - '${TIME_TRACKING_PORT}:${TIME_TRACKING_PORT}'
     environment:
       - PORT=$TIME_TRACKING_PORT
-      - AUTH_IP=$AUTH_IP
+      - AUTH_IP=service_auth
       - AUTH_PORT=$AUTH_PORT
       - DB_DIRECTORY=/app/db
     build:
@@ -51,7 +51,7 @@ services:
       context: '.'
     volumes:
       - time_tracking_db_data:/app/db
-    #restart: always
+    restart: always
     networks:
       - network
 
