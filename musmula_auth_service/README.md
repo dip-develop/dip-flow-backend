@@ -2,10 +2,11 @@
 
 ## A Musmula Auth Micro Service
 
-#### Prepare
+## Getting Started
 ```bash
 dart pub global activate protoc_plugin
 bash <(curl -s https://raw.githubusercontent.com/objectbox/objectbox-dart/main/install.sh) --sync
+dart pub get
 ```
 
 #### Generate files

@@ -2,15 +2,13 @@ FROM dart:stable AS protobuf
 
 ARG TARGETPLATFORM
 
-RUN echo "${TARGETPLATFORM}"
-
 RUN case "${TARGETPLATFORM}" in \
     "linux/amd64")  TARGET_DIR=x86_64  ;; \
     "linux/arm64")  TARGET_DIR=aarch_64  ;; \
     *) exit 1 ;; \
     esac; \
     bash -c 'curl -L -o protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v22.2/protoc-22.2-linux-${TARGET_DIR}.zip' ; \
-    bash -c 'curl -L -o protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v22.2/protoc-22.2-linux-aarch_64.zip'
+    bash -c 'curl -L -o protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v22.2/protoc-22.2-linux-x86_64.zip'
 
 RUN unzip protoc.zip -d /protoc
 

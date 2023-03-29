@@ -2,9 +2,10 @@
 
 ## A Musmula Gateway Micro Service
 
-#### Prepare
+## Getting Started
 ```bash
 dart pub global activate protoc_plugin
+dart pub get
 ```
 
 #### Generate files
