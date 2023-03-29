@@ -96,7 +96,6 @@ class UsersUseCaseImpl implements UsersUseCase {
       {Duration duration = const Duration(hours: 1)}) {
     final dateNow = DateTime.now().toUtc();
     final dateEnd = dateNow.add(duration);
-
     return _generateToken(
         dateCreated: dateNow,
         dateExpired: session.dateExpired.isAfter(dateEnd)
