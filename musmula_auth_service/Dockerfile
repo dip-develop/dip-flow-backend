@@ -2,6 +2,8 @@ FROM dart:stable AS protobuf
 
 ARG TARGETARCH
 
+RUN echo $TARGETARCH;
+
 RUN if [ "$TARGETARCH" = "amd64" ]; then  \
     curl -L -o protoc.zip 'https://github.com/protocolbuffers/protobuf/releases/download/v22.2/protoc-22.2-linux-x86_64.zip' ;  \
     fi
