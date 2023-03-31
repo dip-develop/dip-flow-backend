@@ -129,6 +129,26 @@ class UsersUseCaseImpl implements UsersUseCase {
     return jwt.sign(SecretKey(secret), noIssueAt: false);
   }
 
+  @override
+  Future<UserModel> getUser(String token) {
+    final jwt = _parseToken(token, _secretAccessJWT);
+    final sessionID = int.tryParse(jwt?.jwtId ?? '');
+    if (sessionID == null) {
+      throw AuthException.wrongAuthData();
+    }
+    return _dataBaseRepository.getSession(sessionID).then((session) {
+      if (session == null) {
+        throw AuthException.wrongAuthData();
+      }
+      return _dataBaseRepository.getUser(session.userId).then((user) {
+        if (user == null) {
+          throw AuthException.wrongAuthData();
+        }
+        return user;
+      });
+    });
+  }
+
   String _getPasswordHash(String password) {
     final passwordBytes = utf8.encode(password);
     final secretBytes = utf8.encode(_secretPassword);

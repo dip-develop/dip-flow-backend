@@ -28,7 +28,13 @@ RUN dart pub get
 RUN mkdir lib/src/generated/
 COPY protos ./protos
 RUN protoc --dart_out=grpc:lib/src/generated -Iprotos \
-    protos/time_tracking_service.proto
+    protos/time_tracking_models.proto \
+    protos/time_tracking_service.proto \
+    protos/google/api/annotations.proto \
+    protos/google/api/http.proto \
+    protos/google/protobuf/descriptor.proto \
+    protos/google/protobuf/empty.proto \
+    protos/google/protobuf/timestamp.proto
 RUN bash -c 'bash <(curl -s https://raw.githubusercontent.com/objectbox/objectbox-dart/main/install.sh) --sync --quiet'
 RUN dart run build_runner build -d
 RUN dart compile exe bin/server.dart -o bin/server
