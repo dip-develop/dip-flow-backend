@@ -74,12 +74,12 @@ class UsersUseCaseImpl implements UsersUseCase {
 
   @override
   bool checkRefreshToken(String token) {
-    return _parseToken(token, _secretAccessJWT) != null;
+    return _parseToken(token, _secretRefreshJWT) != null;
   }
 
   @override
   bool checkAccessToken(String token) {
-    return _parseToken(token, _secretRefreshJWT) != null;
+    return _parseToken(token, _secretAccessJWT) != null;
   }
 
   @override
