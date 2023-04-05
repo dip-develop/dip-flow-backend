@@ -28,11 +28,12 @@ RUN dart pub get
 RUN mkdir lib/src/generated/
 COPY protos ./protos
 RUN protoc --dart_out=grpc:lib/src/generated -Iprotos \
+    protos/gate_models.proto \
     protos/gate_service.proto \
-    protos/auth_models.proto \
     protos/auth_service.proto \
-    protos/time_tracking_models.proto \
+    protos/auth_models.proto \
     protos/time_tracking_service.proto \
+    protos/time_tracking_models.proto \
     protos/google/api/annotations.proto \
     protos/google/api/http.proto \
     protos/google/protobuf/descriptor.proto \

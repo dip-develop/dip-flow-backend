@@ -7,10 +7,8 @@ import 'package:musmula_auth_service/src/presentation/auth_service.dart';
 
 import 'server.config.dart';
 
-final getIt = GetIt.instance;
-
 @InjectableInit()
-Future<void> configureDependencies() => getIt.init();
+Future<void> configureDependencies() => GetIt.instance.init();
 
 void main(List<String> args) async {
   print('Database initialization');
@@ -20,7 +18,7 @@ void main(List<String> args) async {
   final serverPort = int.tryParse(Platform.environment['PORT'] ?? '') ?? 8081;
   print('Starting the auth server on port $serverPort');
   final server = Server(
-    [AuthService()],
+    [GetIt.I<AuthService>()],
     List<Interceptor>.empty(),
     /* CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]), */
   );

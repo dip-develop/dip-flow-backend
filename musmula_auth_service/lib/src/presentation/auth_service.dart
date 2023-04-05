@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:get_it/get_it.dart';
 import 'package:grpc/grpc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../domain/exceptions/auth_exception.dart';
 import '../domain/interfaces/interfaces.dart';
@@ -10,8 +10,11 @@ import '../generated/auth_service.pbgrpc.dart';
 import '../generated/google/protobuf/empty.pb.dart';
 import '../generated/google/protobuf/timestamp.pb.dart';
 
+@Singleton()
 class AuthService extends AuthServiceBase {
-  final _usersUseCase = GetIt.I<UsersUseCase>();
+  final UsersUseCase _usersUseCase;
+
+  AuthService(this._usersUseCase);
 
   @override
   Future<AuthReply> signInByEmail(
@@ -107,6 +110,7 @@ class AuthService extends AuthServiceBase {
           ?.map((key, value) => MapEntry(key.toLowerCase(), value))[
               'authorization']
           ?.replaceAll('Bearer', '')
-          .replaceAll('bearer', '').trim()
+          .replaceAll('bearer', '')
+          .trim()
       : null;
 }

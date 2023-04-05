@@ -4,13 +4,12 @@ import 'package:get_it/get_it.dart';
 import 'package:grpc/grpc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:musmula_gateway_service/src/presentation/auth_service.dart';
+import 'package:musmula_gateway_service/src/presentation/time_tracking_service.dart';
 
 import 'server.config.dart';
 
-final getIt = GetIt.instance;
-
 @InjectableInit()
-void configureDependencies() => getIt.init();
+void configureDependencies() => GetIt.instance.init();
 
 void main(List<String> args) async {
   print('Dependency initialization');
@@ -19,7 +18,10 @@ void main(List<String> args) async {
   final port = int.tryParse(Platform.environment['PORT'] ?? '') ?? 8080;
   print('Starting the gateaway server on port $port');
   final server = Server(
-    [AuthService()],
+    [
+      GetIt.I<AuthService>(),
+      GetIt.I<TimeTrackingService>(),
+    ],
     List<Interceptor>.empty(),
     /* CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]), */
   );

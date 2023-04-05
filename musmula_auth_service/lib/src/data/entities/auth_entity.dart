@@ -2,8 +2,6 @@ import 'package:objectbox/objectbox.dart';
 
 import '../../domain/models/models.dart';
 
-//part 'auth_entity.g.dart';
-
 @Entity()
 class EmailAuthEntity implements AuthEntity {
   @Id()

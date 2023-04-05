@@ -2,8 +2,6 @@ import 'package:objectbox/objectbox.dart';
 
 import '../../domain/models/models.dart';
 
-//part 'session_entity.g.dart';
-
 @Entity()
 class SessionEntity {
   @Id()

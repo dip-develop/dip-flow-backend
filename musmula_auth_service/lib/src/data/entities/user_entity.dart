@@ -2,10 +2,9 @@ import 'package:objectbox/objectbox.dart';
 
 import '../../domain/models/models.dart';
 
-//part 'user_entity.g.dart';
-
 @Entity()
 class UserEntity {
+  @Id()
   int id;
   final String? name;
   @Property(type: PropertyType.date)
