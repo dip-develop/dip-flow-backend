@@ -2,6 +2,7 @@ import 'package:grpc/grpc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../generated/auth_service.pbgrpc.dart';
+import '../generated/base_models.pb.dart';
 import '../generated/gate_models.pb.dart' as gate;
 import '../generated/gate_service.pbgrpc.dart';
 import '../generated/google/protobuf/empty.pb.dart';
@@ -16,17 +17,17 @@ class TimeTrackingService extends TimeTrackingGateServiceBase {
   TimeTrackingService(this._timeTrackingClient, this._authClient);
 
   @override
-  Future<TimeTrackReply> getTimeTrack(
-          ServiceCall call, GetTimeTrackRequest request) =>
-      _timeTrackingClient.getTimeTrack(GetTimeTrackRequest(id: request.id),
+  Future<TimeTrackReply> getTimeTrack(ServiceCall call, IdRequest request) =>
+      _timeTrackingClient.getTimeTrack(request,
           options: CallOptions(metadata: call.clientMetadata));
 
   @override
-  Future<TimeTracksReply> getTimeTracks(ServiceCall call, Empty request) =>
+  Future<TimeTracksReply> getTimeTracks(
+          ServiceCall call, PaginationRequest request) =>
       _authClient
-          .getUser(request, options: CallOptions(metadata: call.clientMetadata))
-          .then((user) => _timeTrackingClient
-              .getTimeTracks(GetTimeTracksRequest(userId: user.id)));
+          .getUser(Empty(), options: CallOptions(metadata: call.clientMetadata))
+          .then((user) => _timeTrackingClient.getTimeTracks(GetTimeTrackRequest(
+              userId: user.id, offset: request.offset, limit: request.limit)));
 
   @override
   Future<TimeTrackReply> addTimeTrack(
@@ -40,21 +41,35 @@ class TimeTrackingService extends TimeTrackingGateServiceBase {
               description: request.description)));
 
   @override
-  Future<Empty> deleteTimeTrack(
-          ServiceCall call, DeleteTimeTrackRequest request) =>
-      _timeTrackingClient.deleteTimeTrack(
-          DeleteTimeTrackRequest(id: request.id),
-          options: CallOptions(metadata: call.clientMetadata));
-
-  @override
   Future<TimeTrackReply> updateTimeTrack(
           ServiceCall call, UpdateTimeTrackRequest request) =>
       _timeTrackingClient.updateTimeTrack(
           UpdateTimeTrackRequest(
-              id: request.id,
-              task: request.task,
-              title: request.task,
-              description: request.description,
-              tracks: request.tracks),
+            id: request.id,
+            task: request.task,
+            title: request.title,
+            description: request.description,
+          ),
+          options: CallOptions(metadata: call.clientMetadata));
+
+  @override
+  Future<Empty> deleteTimeTrack(ServiceCall call, IdRequest request) =>
+      _timeTrackingClient.deleteTimeTrack(request,
+          options: CallOptions(metadata: call.clientMetadata));
+
+  @override
+  Future<TimeTrackReply> startTrack(ServiceCall call, IdRequest request) =>
+      _timeTrackingClient.startTrack(request,
+          options: CallOptions(metadata: call.clientMetadata));
+
+  @override
+  Future<TimeTrackReply> stopTrack(ServiceCall call, IdRequest request) =>
+      _timeTrackingClient.stopTrack(request,
+          options: CallOptions(metadata: call.clientMetadata));
+
+  @override
+  Future<TimeTrackReply> deleteTrack(
+          ServiceCall call, DeleteTrackRequest request) =>
+      _timeTrackingClient.deleteTrack(request,
           options: CallOptions(metadata: call.clientMetadata));
 }

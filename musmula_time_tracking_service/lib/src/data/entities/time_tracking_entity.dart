@@ -11,7 +11,6 @@ class TimeTrackingEntity {
   final String? task;
   final String? title;
   final String? description;
-  //final List<TrackEntity> tracks;
   @Backlink('trackTime')
   final tracks = ToMany<TrackEntity>();
 
@@ -21,7 +20,6 @@ class TimeTrackingEntity {
     this.task,
     this.title,
     this.description,
-    //required this.tracks,
   });
 
   TimeTrackingModel toModel() => TimeTrackingModel((p0) => p0
@@ -39,7 +37,6 @@ class TimeTrackingEntity {
       task: model.task,
       title: model.title,
       description: model.description,
-      //tracks: model.tracks.map((p0) => TrackEntity.fromModel(p0)).toList(),
     );
     timeTrack.tracks
         .addAll(model.tracks.map((p0) => TrackEntity.fromModel(p0)));
@@ -60,10 +57,12 @@ class TrackEntity {
   TrackEntity({this.id = 0, required this.start, this.end});
 
   TrackModel toModel() => TrackModel((p0) => p0
+    ..id = id
     ..start = start
     ..end = end);
 
   factory TrackEntity.fromModel(TrackModel model) => TrackEntity(
+        id: model.id ?? 0,
         start: model.start,
         end: model.end,
       );

@@ -35,6 +35,7 @@ class AuthService extends AuthServiceBase {
       } else {
         call.sendTrailers(status: StatusCode.unknown);
       }
+      completer.completeError(onError);
     });
 
     return completer.future;

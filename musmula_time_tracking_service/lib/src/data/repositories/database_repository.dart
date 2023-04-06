@@ -25,13 +25,26 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
       Future.value(_db.box<TimeTrackingEntity>().get(id)?.toModel());
 
   @override
-  Future<List<TimeTrackingModel>> getTimeTracksByUserId(int id) =>
-      Future.value(_db
-              .box<TimeTrackingEntity>()
-              .query(TimeTrackingEntity_.userId.equals(id))
-              .build()
-              .find())
-          .then((value) => value.map((e) => e.toModel()).toList());
+  Future<PaginationModel<TimeTrackingModel>> getTimeTracksByUserId(
+      {required int id, required int offset, required int limit}) {
+    final query = _db
+        .box<TimeTrackingEntity>()
+        .query(TimeTrackingEntity_.userId.equals(id))
+        .build();
+
+    final count = query.count();
+
+    final timeTraks = (query
+          ..limit = limit
+          ..offset = offset)
+        .find();
+
+    return Future.value(timeTraks).then((value) => PaginationModel(
+        count: count,
+        offset: offset,
+        limit: limit,
+        items: value.map((e) => e.toModel()).toList()));
+  }
 
   @override
   Future<TimeTrackingModel> putTimeTrack(TimeTrackingModel timeTrack) =>
@@ -42,5 +55,5 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
 
   @override
   Future<void> deleteTimeTrack(int id) =>
-      Future.value(_db.box<TimeTrackingModel>().remove(id)).then((_) {});
+      Future.value(_db.box<TimeTrackingEntity>().remove(id)).then((_) {});
 }

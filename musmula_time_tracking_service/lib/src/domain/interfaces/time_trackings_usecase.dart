@@ -12,9 +12,13 @@ abstract class TimeTrackingsUseCase {
     String? task,
     String? title,
     String? description,
-    List<TrackModel>? tracks,
   });
   Future<TimeTrackingModel> getTimeTracking(int id);
-  Future<List<TimeTrackingModel>> getTimeTrackings(int userId);
+  Future<PaginationModel<TimeTrackingModel>> getTimeTrackings(
+      {required int userId, int? offset, int? limit});
   Future<void> deleteTimeTracking(int id);
+  Future<TimeTrackingModel> startTrack(int id);
+  Future<TimeTrackingModel> stopTrack(int id);
+  Future<TimeTrackingModel> deleteTrack(
+      {required int id, required int trackId});
 }

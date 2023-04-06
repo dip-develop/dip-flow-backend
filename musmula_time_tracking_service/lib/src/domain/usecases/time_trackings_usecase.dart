@@ -2,7 +2,7 @@ import 'package:built_collection/built_collection.dart';
 
 import '../exceptions/exceptions.dart';
 import '../interfaces/interfaces.dart';
-import '../models/time_tracking_model.dart';
+import '../models/models.dart';
 import '../repositories/repositories.dart';
 
 class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
@@ -27,8 +27,10 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
       });
 
   @override
-  Future<List<TimeTrackingModel>> getTimeTrackings(int userId) =>
-      _dataBaseRepository.getTimeTracksByUserId(userId);
+  Future<PaginationModel<TimeTrackingModel>> getTimeTrackings(
+          {required int userId, int? offset, int? limit}) =>
+      _dataBaseRepository.getTimeTracksByUserId(
+          id: userId, offset: offset ?? 0, limit: limit ?? 5);
 
   @override
   Future<TimeTrackingModel> addTimeTracking({
@@ -64,4 +66,42 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
   @override
   Future<void> deleteTimeTracking(int id) =>
       _dataBaseRepository.deleteTimeTrack(id);
+
+  @override
+  Future<TimeTrackingModel> startTrack(int id) =>
+      stopTrack(id).then((value) => getTimeTracking(id).then((value) {
+            final track =
+                TrackModel((p0) => p0..start = DateTime.now().toUtc());
+            final tracks = List<TrackModel>.from(value.tracks, growable: true);
+            tracks.add(track);
+            return updateTimeTracking(id: id, tracks: tracks);
+          }));
+
+  @override
+  Future<TimeTrackingModel> stopTrack(int id) =>
+      getTimeTracking(id).then((value) {
+        final tracks = List<TrackModel>.from(value.tracks, growable: true);
+        TrackModel? stopedTrack;
+        for (var i = 0; i < tracks.length; i++) {
+          if (tracks[i].end == null) {
+            final track =
+                tracks[i].rebuild((p0) => p0..end = DateTime.now().toUtc());
+            tracks[i] = track;
+            stopedTrack = track;
+          }
+        }
+        if (stopedTrack != null) {
+          return updateTimeTracking(id: id, tracks: tracks);
+        }
+        return value;
+      });
+
+  @override
+  Future<TimeTrackingModel> deleteTrack(
+          {required int id, required int trackId}) =>
+      getTimeTracking(id).then((value) {
+        final tracks = List<TrackModel>.from(value.tracks, growable: true);
+        tracks.removeWhere((element) => element.id == trackId);
+        return updateTimeTracking(id: id, tracks: tracks);
+      });
 }
