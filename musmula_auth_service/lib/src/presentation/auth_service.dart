@@ -71,7 +71,23 @@ class AuthService extends AuthServiceBase {
   @override
   Future<AuthReply> refreshToken(
       ServiceCall call, RefreshTokenRequest request) {
-    throw UnimplementedError();
+    final completer = Completer<AuthReply>();
+    _usersUseCase.refreshToken(request.token).then((session) {
+      final accessToken = _usersUseCase.generateAccessToken(session);
+      final refreshToken = _usersUseCase.generateRefreshToken(session);
+      completer.complete(
+          AuthReply(accessToken: accessToken, refreshToken: refreshToken));
+    }).catchError((onError) {
+      if (onError is AuthException) {
+        call.sendTrailers(
+            status: StatusCode.unauthenticated, message: onError.message);
+      } else {
+        call.sendTrailers(status: StatusCode.unknown);
+      }
+      completer.completeError(onError);
+    });
+
+    return completer.future;
   }
 
   @override

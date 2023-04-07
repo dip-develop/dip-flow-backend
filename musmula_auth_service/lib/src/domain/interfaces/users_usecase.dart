@@ -1,6 +1,7 @@
 import '../models/models.dart';
 
 abstract class UsersUseCase {
+  Future<SessionModel> refreshToken(String token);
   Future<SessionModel> signInByEmail(
       {required String email, required String password});
   Future<SessionModel> signUpByEmail(

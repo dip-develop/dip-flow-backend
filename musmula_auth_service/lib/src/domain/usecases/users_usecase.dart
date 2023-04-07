@@ -26,6 +26,24 @@ class UsersUseCaseImpl implements UsersUseCase {
   }
 
   @override
+  Future<SessionModel> refreshToken(String token) {
+    final jwt = _parseToken(token, _secretRefreshJWT);
+    final sessionID = int.tryParse(jwt?.jwtId ?? '');
+    if (sessionID == null) {
+      throw AuthException.wrongAuthData();
+    }
+    return _dataBaseRepository
+        .getSession(sessionID)
+        .then((session) => _dataBaseRepository.putSession(SessionModel(
+              (p0) => p0
+                ..id = session?.id
+                ..userId = session?.userId
+                ..dateCreated = DateTime.now().toUtc()
+                ..dateExpired = DateTime.now().add(Duration(days: 7)).toUtc(),
+            )));
+  }
+
+  @override
   Future<SessionModel> signInByEmail(
       {required String email, required String password}) {
     return _dataBaseRepository.getAuthByEmail(email).then((auth) {
