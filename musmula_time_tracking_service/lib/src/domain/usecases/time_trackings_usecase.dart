@@ -56,12 +56,21 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
     String? description,
     List<TrackModel>? tracks,
   }) =>
-      getTimeTracking(id).then(
-          (value) => _dataBaseRepository.putTimeTrack(value.rebuild((p0) => p0
-            ..task = task ?? p0.task
-            ..title = title ?? p0.title
-            ..description = description ?? p0.description
-            ..tracks = tracks != null ? ListBuilder(tracks) : p0.tracks)));
+      getTimeTracking(id).then((timeTrack) {
+        final needDelete = List<Future<void>>.empty(growable: true);
+        if (tracks != null) {
+          final a = timeTrack.tracks
+              .where((p0) => !tracks.any((element) => element.id == p0.id))
+              .map((e) => _dataBaseRepository.deleteTrack(e.id!));
+          needDelete.addAll(a);
+        }
+        return Future.wait(needDelete).then(
+            (_) => _dataBaseRepository.putTimeTrack(timeTrack.rebuild((p0) => p0
+              ..task = task ?? p0.task
+              ..title = title ?? p0.title
+              ..description = description ?? p0.description
+              ..tracks = tracks != null ? ListBuilder(tracks) : p0.tracks)));
+      });
 
   @override
   Future<void> deleteTimeTracking(int id) =>

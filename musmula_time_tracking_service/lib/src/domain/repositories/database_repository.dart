@@ -8,4 +8,5 @@ abstract class DataBaseRepository {
       {required int id, required int offset, required int limit});
   Future<TimeTrackingModel> putTimeTrack(TimeTrackingModel timeTrack);
   Future<void> deleteTimeTrack(int id);
+  Future<void> deleteTrack(int id);
 }
