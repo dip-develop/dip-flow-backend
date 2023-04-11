@@ -29,7 +29,7 @@ class TimeTrackingService extends TimeTrackingServiceBase {
             id: timeTrack.id,
             userId: timeTrack.userId,
             task: timeTrack.task,
-            title: timeTrack.task,
+            title: timeTrack.title,
             description: timeTrack.description,
             tracks: timeTrack.tracks.map((p0) => TrackReply(
                 id: p0.id,
@@ -65,7 +65,7 @@ class TimeTrackingService extends TimeTrackingServiceBase {
                 id: timeTrack.id,
                 userId: timeTrack.userId,
                 task: timeTrack.task,
-                title: timeTrack.task,
+                title: timeTrack.title,
                 description: timeTrack.description,
                 tracks: timeTrack.tracks.map((p0) => TrackReply(
                     id: p0.id,
