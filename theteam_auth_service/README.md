@@ -1,6 +1,6 @@
-# Musmula Auth
+# TheTeam Auth
 
-## A Musmula Auth Micro Service
+## A TheTeam Auth Micro Service
 
 ## Getting Started
 ```bash

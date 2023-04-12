@@ -1,5 +1,5 @@
-name: musmula_gateway_service
-description: A Musmula Gateway Micro Service.
+name: theteam_gateway_service
+description: A TheTeam Gateway Micro Service.
 version: 1.0.0
 publish_to: none
 

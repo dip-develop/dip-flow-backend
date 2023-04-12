@@ -9,6 +9,6 @@ steps:
   inputs:
     sshEndpoint: 'DipDev Server'
     runOptions: 'commands'
-    commands: 'cd workspace && cd musmula_backend && git reset --hard HEAD && git checkout main && git pull origin main && git submodule update --init --recursive --remote --force && docker-compose up -d --build && exit'
+    commands: 'cd workspace && cd theteam_backend && git reset --hard HEAD && git checkout main && git pull origin main && git submodule update --init --recursive --remote --force && docker-compose up -d --build && exit'
     readyTimeout: '20000'
     failOnStdErr: false

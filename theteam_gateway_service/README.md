@@ -1,6 +1,6 @@
-# Musmula Gateway
+# TheTeam Gateway
 
-## A Musmula Gateway Micro Service
+## A TheTeam Gateway Micro Service
 
 ## Getting Started
 ```bash

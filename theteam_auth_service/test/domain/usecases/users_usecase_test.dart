@@ -1,8 +1,8 @@
-import 'package:musmula_auth_service/src/data/repositories/database_repository.dart';
-import 'package:musmula_auth_service/src/domain/interfaces/interfaces.dart';
-import 'package:musmula_auth_service/src/domain/models/session_model.dart';
-import 'package:musmula_auth_service/src/domain/repositories/repositories.dart';
-import 'package:musmula_auth_service/src/domain/usecases/usecases.dart';
+import 'package:theteam_auth_service/src/data/repositories/database_repository.dart';
+import 'package:theteam_auth_service/src/domain/interfaces/interfaces.dart';
+import 'package:theteam_auth_service/src/domain/models/session_model.dart';
+import 'package:theteam_auth_service/src/domain/repositories/repositories.dart';
+import 'package:theteam_auth_service/src/domain/usecases/usecases.dart';
 import 'package:test/test.dart';
 
 void main() {

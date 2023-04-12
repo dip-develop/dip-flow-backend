@@ -1,6 +1,6 @@
-# Musmula Time Tracking
+# TheTeam Time Tracking
 
-## A Musmula Time Tracking Micro Service
+## A TheTeam Time Tracking Micro Service
 
 ## Getting Started
 ```bash

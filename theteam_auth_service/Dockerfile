@@ -23,7 +23,7 @@ WORKDIR /app
 ENV PATH="/root/.pub-cache/bin:$PATH"
 RUN dart pub global activate protoc_plugin
 
-COPY musmula_auth_service/ ./
+COPY theteam_auth_service/ ./
 RUN dart pub get
 RUN mkdir lib/src/generated/
 COPY protos ./protos

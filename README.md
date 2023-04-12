@@ -1,6 +1,6 @@
-# Musmula Backend
+# TheTeam Backend
 
-## A Musmula Backend with Micro Service Arhitecture
+## A TheTeam Backend with Micro Service Arhitecture
 
 #### Get last datas
 ```bash

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:get_it/get_it.dart';
 import 'package:grpc/grpc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:musmula_auth_service/src/presentation/auth_service.dart';
+import 'package:theteam_auth_service/src/presentation/auth_service.dart';
 
 import 'server.config.dart';
 

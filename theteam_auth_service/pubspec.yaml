@@ -1,5 +1,5 @@
-name: musmula_time_tracking_service
-description: A Musmula Time Tracking Micro Service.
+name: theteam_auth_service
+description: A TheTeam Auth Micro Service.
 version: 1.0.0
 publish_to: none
 
@@ -8,9 +8,11 @@ environment:
 
 dependencies:
   grpc: ^3.1.0
+  dart_jsonwebtoken: ^2.7.1
   objectbox: ^1.7.2
   get_it: ^7.2.0
   injectable: ^2.1.0
+  crypto: ^3.0.2
   built_value: ^8.4.4
   built_collection: ^5.1.1
 

@@ -11,7 +11,7 @@ import '../repositories/repositories.dart';
 const _secretRefreshJWT = 'df6KJbwe7hj345kjbjkK4354KL12';
 const _secretAccessJWT = 'hD4nsd84n';
 const _secretPassword = '3Jn5kaserjJnbf';
-const _issuer = 'musmula_auth_service';
+const _issuer = 'theteam_auth_service';
 
 class UsersUseCaseImpl implements UsersUseCase {
   final DataBaseRepository _dataBaseRepository;
