@@ -105,7 +105,8 @@ class UsersUseCaseImpl implements UsersUseCase {
     return _generateToken(
         dateCreated: session.dateCreated,
         dateExpired: session.dateExpired,
-        jwtId: session.userId.toString(),
+        jwtId: session.id!,
+        userId: session.userId,
         secret: _secretRefreshJWT);
   }
 
@@ -119,7 +120,8 @@ class UsersUseCaseImpl implements UsersUseCase {
         dateExpired: session.dateExpired.isAfter(dateEnd)
             ? dateEnd
             : session.dateExpired,
-        jwtId: session.id.toString(),
+        jwtId: session.id!,
+        userId: session.userId,
         secret: _secretAccessJWT);
   }
 
@@ -132,16 +134,18 @@ class UsersUseCaseImpl implements UsersUseCase {
   String _generateToken(
       {required DateTime dateCreated,
       required DateTime dateExpired,
-      required String jwtId,
+      required int jwtId,
+      required int userId,
       required String secret}) {
     final jwt = JWT(
       {
         'iat': dateCreated.millisecondsSinceEpoch ~/ 1000,
         'exp': dateExpired.millisecondsSinceEpoch ~/ 1000,
         'nbf': dateCreated.millisecondsSinceEpoch ~/ 1000,
+        'user': userId.toString(),
       },
       issuer: _issuer,
-      jwtId: jwtId,
+      jwtId: jwtId.toString(),
     );
 
     return jwt.sign(SecretKey(secret), noIssueAt: false);
@@ -149,22 +153,31 @@ class UsersUseCaseImpl implements UsersUseCase {
 
   @override
   Future<UserModel> getUser(String token) {
-    final jwt = _parseToken(token, _secretAccessJWT);
-    final sessionID = int.tryParse(jwt?.jwtId ?? '');
-    if (sessionID == null) {
+    final userId = _getUserId(token);
+    if (userId == null) {
       throw AuthException.wrongAuthData();
     }
-    return _dataBaseRepository.getSession(sessionID).then((session) {
-      if (session == null) {
+    return _dataBaseRepository.getSessionsByUserId(userId).then((sessions) {
+      if (sessions.isEmpty) {
         throw AuthException.wrongAuthData();
       }
-      return _dataBaseRepository.getUser(session.userId).then((user) {
+      return _dataBaseRepository.getUser(userId).then((user) {
         if (user == null) {
           throw AuthException.wrongAuthData();
         }
         return user;
       });
     });
+  }
+
+  int? _getUserId(String token) {
+    final jwt = _parseToken(token, _secretAccessJWT);
+    final payload = jwt?.payload;
+    if (payload != null && payload is Map && payload.containsKey('user')) {
+      return int.tryParse(payload['user'] ?? '');
+    } else {
+      return null;
+    }
   }
 
   String _getPasswordHash(String password) {

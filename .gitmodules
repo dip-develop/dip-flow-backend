@@ -1,3 +1,12 @@
-[submodule "protos"]
-	path = protos
+[submodule "theteam_auth_service_protos"]
+	path = theteam_auth_service/protos
 	url = git@ssh.dev.azure.com:v3/dipdev/TheTeam/Protos
+	branch = main
+[submodule "theteam_gateway_service_protos"]
+	path = theteam_gateway_service/protos
+	url = git@ssh.dev.azure.com:v3/dipdev/TheTeam/Protos
+	branch = main
+[submodule "theteam_time_tracking_service_protos"]
+	path = theteam_time_tracking_service/protos
+	url = git@ssh.dev.azure.com:v3/dipdev/TheTeam/Protos
+	branch = main

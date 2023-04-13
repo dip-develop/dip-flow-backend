@@ -26,7 +26,7 @@ RUN dart pub global activate protoc_plugin
 COPY theteam_auth_service/ ./
 RUN dart pub get
 RUN mkdir lib/src/generated/
-COPY protos ./protos
+#COPY protos ./protos
 RUN protoc --dart_out=grpc:lib/src/generated -Iprotos \
     protos/base_models.proto \
     protos/auth_service.proto \
