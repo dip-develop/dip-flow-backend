@@ -94,6 +94,11 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
       Future.value(_db.box<TimeTrackingEntity>().remove(id)).then((_) {});
 
   @override
+  Future<void> putTrack(TrackModel track) =>
+      Future.value(_db.box<TrackEntity>().put(TrackEntity.fromModel(track)))
+          .then((value) => track.rebuild((p0) => p0..id = value));
+
+  @override
   Future<void> deleteTrack(int id) =>
       Future.value(_db.box<TrackEntity>().remove(id)).then((_) {});
 }
