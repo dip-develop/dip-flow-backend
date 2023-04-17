@@ -14,8 +14,14 @@ abstract class TimeTrackingsUseCase {
     String? description,
   });
   Future<TimeTrackingModel> getTimeTracking(int id);
-  Future<PaginationModel<TimeTrackingModel>> getTimeTrackings(
-      {required int userId, int? offset, int? limit});
+  Future<PaginationModel<TimeTrackingModel>> getTimeTrackings({
+    required int userId,
+    int? offset,
+    int? limit,
+    DateTime? start,
+    DateTime? end,
+    String? search,
+  });
   Future<void> deleteTimeTracking(int id);
   Future<TimeTrackingModel> startTrack(int id);
   Future<TimeTrackingModel> stopTrack(int id);

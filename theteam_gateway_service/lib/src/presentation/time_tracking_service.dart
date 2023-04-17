@@ -23,11 +23,14 @@ class TimeTrackingService extends TimeTrackingGateServiceBase {
 
   @override
   Future<TimeTracksReply> getTimeTracks(
-          ServiceCall call, PaginationRequest request) =>
+          ServiceCall call, gate.GetTimeTrackRequest request) =>
       _authClient
           .getUser(Empty(), options: CallOptions(metadata: call.clientMetadata))
           .then((user) => _timeTrackingClient.getTimeTracks(GetTimeTrackRequest(
-              userId: user.id, offset: request.offset, limit: request.limit)));
+              userId: user.id,
+              pagination: request.pagination,
+              dateRange: request.dateRange,
+              search: request.search)));
 
   @override
   Future<TimeTrackReply> addTimeTrack(

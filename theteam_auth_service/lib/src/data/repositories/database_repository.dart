@@ -26,10 +26,9 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
       Future.value(_db.box<UserEntity>().get(id)?.toModel());
 
   @override
-  Future<UserModel> putUser(UserModel user) => _db
-      .box<UserEntity>()
-      .putAsync(UserEntity.fromModel(user))
-      .then((value) => user.rebuild((p0) => p0..id = value));
+  Future<UserModel> putUser(UserModel user) =>
+      Future.value(_db.box<UserEntity>().put(UserEntity.fromModel(user)))
+          .then((value) => user.rebuild((p0) => p0..id = value));
 
   @override
   Future<void> deleteUser(int id) =>
@@ -40,12 +39,12 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
       Future.value(_db.box<SessionEntity>().get(id)?.toModel());
 
   @override
-  Future<List<SessionModel>> getSessionsByUserId(int id) => Future.value(_db
-          .box<SessionEntity>()
-          .query(SessionEntity_.userId.equals(id))
-          .build()
-          .find())
-      .then((value) => value.map((e) => e.toModel()).toList());
+  Future<List<SessionModel>> getSessionsByUserId(int id) {
+    QueryBuilder<SessionEntity> query = _db.box<SessionEntity>().query()
+      ..link(SessionEntity_.user, UserEntity_.id.equals(id));
+    return Future.value(query.build().find())
+        .then((value) => value.map((e) => e.toModel()).toList());
+  }
 
   @override
   Future<List<SessionModel>> getExpiredSessions() => Future.value(_db
@@ -57,9 +56,8 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
       .then((value) => value.map((e) => e.toModel()).toList());
 
   @override
-  Future<SessionModel> putSession(SessionModel session) => _db
-      .box<SessionEntity>()
-      .putAsync(SessionEntity.fromModel(session))
+  Future<SessionModel> putSession(SessionModel session) => Future.value(
+          _db.box<SessionEntity>().put(SessionEntity.fromModel(session)))
       .then((value) => session.rebuild((p0) => p0..id = value));
 
   @override
@@ -87,9 +85,8 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
       Future.value(_db.box<EmailAuthEntity>().get(id)?.toModel());
 
   @override
-  Future<EmailAuthModel> putEmailAuth(EmailAuthModel auth) => _db
-      .box<EmailAuthEntity>()
-      .putAsync(EmailAuthEntity.fromModel(auth))
+  Future<EmailAuthModel> putEmailAuth(EmailAuthModel auth) => Future.value(
+          _db.box<EmailAuthEntity>().put(EmailAuthEntity.fromModel(auth)))
       .then((value) => auth.rebuild((p0) => p0..id = value));
 
   @override

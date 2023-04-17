@@ -8,10 +8,12 @@ class TimeTrackingEntity {
   @Id()
   int id;
   final int userId;
+  @Index(type: IndexType.value)
   final String? task;
+  @Index(type: IndexType.value)
   final String? title;
+  @Index(type: IndexType.value)
   final String? description;
-  @Backlink('trackTime')
   final tracks = ToMany<TrackEntity>();
 
   TimeTrackingEntity({
@@ -49,8 +51,10 @@ class TrackEntity {
   @Id()
   int id;
   final trackTime = ToOne<TimeTrackingEntity>();
+  @Index()
   @Property(type: PropertyType.date)
   final DateTime start;
+  @Index()
   @Property(type: PropertyType.date)
   final DateTime? end;
 

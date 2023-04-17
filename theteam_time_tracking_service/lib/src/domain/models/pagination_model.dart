@@ -1,7 +1,7 @@
 class PaginationModel<T> {
   final int count;
-  final int offset;
-  final int limit;
+  final int? offset;
+  final int? limit;
   final List<T> items;
 
   PaginationModel(

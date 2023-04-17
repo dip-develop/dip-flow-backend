@@ -27,10 +27,22 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
       });
 
   @override
-  Future<PaginationModel<TimeTrackingModel>> getTimeTrackings(
-          {required int userId, int? offset, int? limit}) =>
+  Future<PaginationModel<TimeTrackingModel>> getTimeTrackings({
+    required int userId,
+    int? offset,
+    int? limit,
+    DateTime? start,
+    DateTime? end,
+    String? search,
+  }) =>
       _dataBaseRepository.getTimeTracksByUserId(
-          id: userId, offset: offset ?? 0, limit: limit ?? 5);
+        id: userId,
+        offset: offset,
+        limit: limit,
+        start: start,
+        end: end,
+        search: search,
+      );
 
   @override
   Future<TimeTrackingModel> addTimeTracking({

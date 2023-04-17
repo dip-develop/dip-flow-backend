@@ -55,8 +55,18 @@ class TimeTrackingService extends TimeTrackingServiceBase {
     _timeTrackings
         .getTimeTrackings(
             userId: request.userId,
-            offset: request.offset,
-            limit: request.limit)
+            offset: request.pagination.hasOffset()
+                ? request.pagination.offset
+                : null,
+            limit:
+                request.pagination.hasLimit() ? request.pagination.limit : null,
+            start: request.dateRange.hasStart()
+                ? request.dateRange.start.toDateTime()
+                : null,
+            end: request.dateRange.hasEnd()
+                ? request.dateRange.end.toDateTime()
+                : null,
+            search: request.search.hasSearch() ? request.search.search : null)
         .then((timeTracks) => TimeTracksReply(
             count: timeTracks.count,
             limit: timeTracks.limit,

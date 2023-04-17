@@ -1,14 +1,15 @@
 import 'package:objectbox/objectbox.dart';
 
 import '../../domain/models/models.dart';
+import 'entities.dart';
 
 @Entity()
 class EmailAuthEntity implements AuthEntity {
   @Id()
   @override
   int id;
-  @override
-  final int userId;
+  final user = ToOne<UserEntity>();
+  @Index(type: IndexType.value)
   final String email;
   final String password;
   @Property(type: PropertyType.date)
@@ -17,7 +18,6 @@ class EmailAuthEntity implements AuthEntity {
 
   EmailAuthEntity({
     this.id = 0,
-    required this.userId,
     required this.email,
     required this.password,
     required this.dateCreated,
@@ -25,18 +25,17 @@ class EmailAuthEntity implements AuthEntity {
 
   EmailAuthModel toModel() => EmailAuthModel((p0) => p0
     ..id = id
-    ..userId = userId
+    ..userId = user.targetId
     ..email = email
     ..password = password
     ..dateCreated = dateCreated);
 
   factory EmailAuthEntity.fromModel(EmailAuthModel model) => EmailAuthEntity(
         id: model.id ?? 0,
-        userId: model.userId,
         email: model.email,
         password: model.password,
         dateCreated: model.dateCreated,
-      );
+      )..user.targetId = model.userId;
 }
 
 @Entity()
@@ -44,8 +43,8 @@ class OpenAuthEntity implements AuthEntity {
   @Id()
   @override
   int id;
-  @override
-  final int userId;
+  final user = ToOne<UserEntity>();
+  @Index(type: IndexType.value)
   final String identifier;
   @Property(type: PropertyType.date)
   @override
@@ -53,7 +52,6 @@ class OpenAuthEntity implements AuthEntity {
 
   OpenAuthEntity({
     this.id = 0,
-    required this.userId,
     required this.identifier,
     required this.dateCreated,
   });
@@ -61,12 +59,10 @@ class OpenAuthEntity implements AuthEntity {
 
 abstract class AuthEntity {
   final int id;
-  final int userId;
   final DateTime dateCreated;
 
   const AuthEntity({
     this.id = 0,
-    required this.userId,
     required this.dateCreated,
   });
 }

@@ -4,35 +4,6 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:2340198465594571732",
-      "lastPropertyId": "4:8350933442784770571",
-      "name": "SessionEntity",
-      "properties": [
-        {
-          "id": "1:3667494716701967190",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:4572872307460652610",
-          "name": "userId",
-          "type": 6
-        },
-        {
-          "id": "3:1854790215859902453",
-          "name": "dateCreated",
-          "type": 10
-        },
-        {
-          "id": "4:8350933442784770571",
-          "name": "dateExpired",
-          "type": 10
-        }
-      ],
-      "relations": []
-    },
-    {
       "id": "2:2507696998683691206",
       "lastPropertyId": "3:4634169596380432044",
       "name": "UserEntity",
@@ -57,33 +28,38 @@
       "relations": []
     },
     {
-      "id": "3:9096991638018609193",
-      "lastPropertyId": "5:4040272918993594484",
+      "id": "5:5087828300106383585",
+      "lastPropertyId": "5:2304765030964696724",
       "name": "EmailAuthEntity",
       "properties": [
         {
-          "id": "1:3269212144904149108",
+          "id": "1:398454425774250487",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:127700726136604335",
+          "id": "2:1166059800905112948",
           "name": "userId",
-          "type": 6
+          "type": 11,
+          "flags": 520,
+          "indexId": "5:2778103283239435252",
+          "relationTarget": "UserEntity"
         },
         {
-          "id": "3:8676060845578864761",
+          "id": "3:84738075541697524",
           "name": "email",
-          "type": 9
+          "type": 9,
+          "flags": 8,
+          "indexId": "6:4171986709831498239"
         },
         {
-          "id": "4:8265988273679554397",
+          "id": "4:8053463524237025406",
           "name": "password",
           "type": 9
         },
         {
-          "id": "5:4040272918993594484",
+          "id": "5:2304765030964696724",
           "name": "dateCreated",
           "type": 10
         }
@@ -91,44 +67,99 @@
       "relations": []
     },
     {
-      "id": "4:5535583809853951695",
-      "lastPropertyId": "4:3391274638161701285",
+      "id": "6:8877082751617181888",
+      "lastPropertyId": "4:3570776390253906835",
       "name": "OpenAuthEntity",
       "properties": [
         {
-          "id": "1:3848604587899372504",
+          "id": "1:923727030061550625",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:9000785692045325166",
+          "id": "2:563968590603714722",
           "name": "userId",
-          "type": 6
+          "type": 11,
+          "flags": 520,
+          "indexId": "9:3125022368598987720",
+          "relationTarget": "UserEntity"
         },
         {
-          "id": "3:8534782181123231437",
+          "id": "3:7229238398696905899",
           "name": "identifier",
-          "type": 9
+          "type": 9,
+          "flags": 8,
+          "indexId": "7:2303346166500033413"
         },
         {
-          "id": "4:3391274638161701285",
+          "id": "4:3570776390253906835",
           "name": "dateCreated",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:3762607774246853516",
+      "lastPropertyId": "4:7760355511825858875",
+      "name": "SessionEntity",
+      "properties": [
+        {
+          "id": "1:3967547225184965472",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3599480187577306740",
+          "name": "userId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "8:2629885901921599632",
+          "relationTarget": "UserEntity"
+        },
+        {
+          "id": "3:1334404428954056695",
+          "name": "dateCreated",
+          "type": 10
+        },
+        {
+          "id": "4:7760355511825858875",
+          "name": "dateExpired",
           "type": 10
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "4:5535583809853951695",
-  "lastIndexId": "0:0",
+  "lastEntityId": "7:3762607774246853516",
+  "lastIndexId": "9:3125022368598987720",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    2340198465594571732,
+    9096991638018609193,
+    5535583809853951695
+  ],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    3667494716701967190,
+    4572872307460652610,
+    1854790215859902453,
+    8350933442784770571,
+    3269212144904149108,
+    127700726136604335,
+    8676060845578864761,
+    8265988273679554397,
+    4040272918993594484,
+    3848604587899372504,
+    9000785692045325166,
+    8534782181123231437,
+    3391274638161701285
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

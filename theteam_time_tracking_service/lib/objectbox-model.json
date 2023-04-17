@@ -22,12 +22,16 @@
         {
           "id": "3:3146232665253541302",
           "name": "task",
-          "type": 9
+          "type": 9,
+          "flags": 8,
+          "indexId": "2:5125508630354005615"
         },
         {
           "id": "4:6654948656948773005",
           "name": "title",
-          "type": 9
+          "type": 9,
+          "flags": 8,
+          "indexId": "3:6438641760933835481"
         },
         {
           "id": "5:556111478988751887",
@@ -35,7 +39,13 @@
           "type": 9
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "2:4333529739874634824",
+          "name": "tracks",
+          "targetId": "2:6871651719677882241"
+        }
+      ]
     },
     {
       "id": "2:6871651719677882241",
@@ -59,20 +69,24 @@
         {
           "id": "3:7895875721993905226",
           "name": "start",
-          "type": 10
+          "type": 10,
+          "flags": 8,
+          "indexId": "4:5293981972706443970"
         },
         {
           "id": "4:1838970841809292805",
           "name": "end",
-          "type": 10
+          "type": 10,
+          "flags": 8,
+          "indexId": "5:6628220393426591609"
         }
       ],
       "relations": []
     }
   ],
   "lastEntityId": "2:6871651719677882241",
-  "lastIndexId": "1:5338758200883985709",
-  "lastRelationId": "0:0",
+  "lastIndexId": "5:6628220393426591609",
+  "lastRelationId": "2:4333529739874634824",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
@@ -81,6 +95,8 @@
   "retiredPropertyUids": [
     803875786095962623
   ],
-  "retiredRelationUids": [],
+  "retiredRelationUids": [
+    1345641690262090534
+  ],
   "version": 1
 }

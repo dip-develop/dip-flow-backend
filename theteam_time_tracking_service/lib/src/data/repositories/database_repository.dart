@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:injectable/injectable.dart';
+import 'package:injectable/injectable.dart' as inj;
 
 import '../../../objectbox.g.dart';
 import '../../domain/models/models.dart';
 import '../../domain/repositories/repositories.dart';
 import '../entities/entities.dart';
 
-@Singleton(as: DataBaseRepository)
+@inj.Singleton(as: DataBaseRepository)
 class DataBaseRepositoryImpl implements DataBaseRepository {
   late final Store _db;
 
@@ -25,25 +25,61 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
       Future.value(_db.box<TimeTrackingEntity>().get(id)?.toModel());
 
   @override
-  Future<PaginationModel<TimeTrackingModel>> getTimeTracksByUserId(
-      {required int id, required int offset, required int limit}) {
-    final query = _db
-        .box<TimeTrackingEntity>()
-        .query(TimeTrackingEntity_.userId.equals(id))
+  Future<PaginationModel<TimeTrackingModel>> getTimeTracksByUserId({
+    required int id,
+    int? offset,
+    int? limit,
+    DateTime? start,
+    DateTime? end,
+    String? search,
+  }) {
+    Condition<TimeTrackingEntity> qc = TimeTrackingEntity_.userId.equals(id);
+
+    if (search != null) {
+      qc = qc
+        ..orAny([
+          TimeTrackingEntity_.task.contains(search),
+          TimeTrackingEntity_.title.contains(search),
+          TimeTrackingEntity_.description.contains(search),
+        ]);
+    }
+
+    QueryBuilder<TimeTrackingEntity> queryBuilder =
+        _db.box<TimeTrackingEntity>().query(qc);
+
+    if (start != null) {
+      queryBuilder = queryBuilder
+        ..linkMany(TimeTrackingEntity_.tracks,
+            TrackEntity_.start.greaterOrEqual(start.millisecond));
+    }
+
+    if (end != null) {
+      queryBuilder = queryBuilder
+        ..linkMany(TimeTrackingEntity_.tracks,
+            TrackEntity_.start.lessOrEqual(end.millisecond));
+    }
+
+    Query<TimeTrackingEntity> query = queryBuilder
+        .order(TimeTrackingEntity_.id, flags: Order.descending)
         .build();
 
     final count = query.count();
 
-    final timeTraks = (query
-          ..limit = limit
-          ..offset = offset)
-        .find();
+    if (offset != null) {
+      query = query..offset = offset;
+    }
 
-    return Future.value(timeTraks).then((value) => PaginationModel(
-        count: count,
-        offset: offset,
-        limit: limit,
-        items: value.map((e) => e.toModel()).toList()));
+    if (limit != null) {
+      query = query..limit = limit;
+    }
+
+    return Future.value(query.find())
+        .then((value) => PaginationModel(
+            count: count,
+            offset: offset,
+            limit: limit,
+            items: value.map((e) => e.toModel()).toList()))
+        .whenComplete(() => query.close());
   }
 
   @override
