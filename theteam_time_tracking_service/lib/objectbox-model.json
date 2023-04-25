@@ -38,7 +38,7 @@
           "name": "description",
           "type": 9,
           "flags": 8,
-          "indexId": "6:1746629418663416926"
+          "indexId": "6:7595762349568554593"
         }
       ],
       "relations": [
@@ -87,7 +87,7 @@
     }
   ],
   "lastEntityId": "2:6871651719677882241",
-  "lastIndexId": "6:1746629418663416926",
+  "lastIndexId": "6:7595762349568554593",
   "lastRelationId": "2:4333529739874634824",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
