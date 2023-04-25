@@ -36,7 +36,9 @@
         {
           "id": "5:556111478988751887",
           "name": "description",
-          "type": 9
+          "type": 9,
+          "flags": 8,
+          "indexId": "6:1746629418663416926"
         }
       ],
       "relations": [
@@ -85,7 +87,7 @@
     }
   ],
   "lastEntityId": "2:6871651719677882241",
-  "lastIndexId": "5:6628220393426591609",
+  "lastIndexId": "6:1746629418663416926",
   "lastRelationId": "2:4333529739874634824",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
