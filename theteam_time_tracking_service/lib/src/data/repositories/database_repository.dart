@@ -35,28 +35,34 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
   }) {
     Condition<TimeTrackingEntity> qc = TimeTrackingEntity_.userId.equals(id);
 
-    if (search != null) {
-      qc = qc
-        ..orAny([
-          TimeTrackingEntity_.task.contains(search),
-          TimeTrackingEntity_.title.contains(search),
-          TimeTrackingEntity_.description.contains(search),
-        ]);
+    if (search != null && search.isNotEmpty) {
+      qc = qc.and(
+        TimeTrackingEntity_.task
+            .contains(search, caseSensitive: false)
+            .or(TimeTrackingEntity_.title
+                .contains(search, caseSensitive: false))
+            .or(TimeTrackingEntity_.description
+                .contains(search, caseSensitive: false)),
+      );
     }
 
     QueryBuilder<TimeTrackingEntity> queryBuilder =
         _db.box<TimeTrackingEntity>().query(qc);
 
-    if (start != null) {
-      queryBuilder = queryBuilder
-        ..linkMany(TimeTrackingEntity_.tracks,
-            TrackEntity_.start.greaterOrEqual(start.millisecond));
-    }
+    if (start != null /* || end != null */) {
+      final condition = /*start != null  && end != null
+          ? TrackEntity_.start.greaterOrEqual(start.millisecond).and(
+              TrackEntity_.end
+                  .isNull()
+                  .or(TrackEntity_.end.lessOrEqual(end.millisecond)))
+          : start != null
+              ? */
+          TrackEntity_.start.greaterOrEqual(start.millisecond)
+          /* : TrackEntity_.end.isNull().or(TrackEntity_.end
+                  .lessThan(end!.add(Duration(days: 1)).millisecond)) */
+          ;
 
-    if (end != null) {
-      queryBuilder = queryBuilder
-        ..linkMany(TimeTrackingEntity_.tracks,
-            TrackEntity_.start.lessOrEqual(end.millisecond));
+      queryBuilder.linkMany(TimeTrackingEntity_.tracks, condition);
     }
 
     Query<TimeTrackingEntity> query = queryBuilder
