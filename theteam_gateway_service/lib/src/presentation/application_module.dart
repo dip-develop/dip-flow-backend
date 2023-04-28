@@ -25,6 +25,22 @@ abstract class ApplicationModule {
   }
 
   @lazySingleton
+  UserServiceClient userServiceClient() {
+    final authIP = Platform.environment['AUTH_IP'] ?? '127.0.0.1';
+    final authPort =
+        int.tryParse(Platform.environment['AUTH_PORT'] ?? '') ?? 8081;
+    print('Starting the auth client at $authIP:$authPort');
+    final authChannel = ClientChannel(
+      authIP,
+      port: authPort,
+      options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
+    );
+
+    return UserServiceClient(authChannel,
+        options: CallOptions(timeout: Duration(seconds: 30)));
+  }
+
+  @lazySingleton
   TimeTrackingServiceClient timeTrackingServiceClient() {
     final timeTrackingIP =
         Platform.environment['TIME_TRACKING_IP'] ?? '127.0.0.1';
