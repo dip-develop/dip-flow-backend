@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:2507696998683691206",
-      "lastPropertyId": "3:4634169596380432044",
+      "lastPropertyId": "5:2570554631550006320",
       "name": "UserEntity",
       "properties": [
         {
@@ -23,13 +23,23 @@
           "id": "3:4634169596380432044",
           "name": "dateCreated",
           "type": 10
+        },
+        {
+          "id": "4:4848394908933736213",
+          "name": "price",
+          "type": 7
+        },
+        {
+          "id": "5:2570554631550006320",
+          "name": "workDays",
+          "type": 23
         }
       ],
       "relations": []
     },
     {
       "id": "5:5087828300106383585",
-      "lastPropertyId": "5:2304765030964696724",
+      "lastPropertyId": "6:4454536625832913030",
       "name": "EmailAuthEntity",
       "properties": [
         {
@@ -62,6 +72,11 @@
           "id": "5:2304765030964696724",
           "name": "dateCreated",
           "type": 10
+        },
+        {
+          "id": "6:4454536625832913030",
+          "name": "isVerified",
+          "type": 1
         }
       ],
       "relations": []

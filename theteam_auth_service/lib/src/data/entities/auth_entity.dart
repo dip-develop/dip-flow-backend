@@ -12,6 +12,7 @@ class EmailAuthEntity implements AuthEntity {
   @Index(type: IndexType.value)
   final String email;
   final String password;
+  final bool isVerified;
   @Property(type: PropertyType.date)
   @override
   final DateTime dateCreated;
@@ -20,6 +21,7 @@ class EmailAuthEntity implements AuthEntity {
     this.id = 0,
     required this.email,
     required this.password,
+    required this.isVerified,
     required this.dateCreated,
   });
 
@@ -34,6 +36,7 @@ class EmailAuthEntity implements AuthEntity {
         id: model.id ?? 0,
         email: model.email,
         password: model.password,
+        isVerified: model.isVerified,
         dateCreated: model.dateCreated,
       )..user.targetId = model.userId;
 }

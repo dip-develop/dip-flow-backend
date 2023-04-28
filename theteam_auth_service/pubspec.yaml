@@ -21,6 +21,7 @@ dependencies:
   crypto: ^3.0.2
   built_value: ^8.4.4
   built_collection: ^5.1.1
+  mailer: ^6.0.1
 
 dev_dependencies:
   lints: ^2.0.0

@@ -26,6 +26,10 @@ services:
       - '${AUTH_PORT}:${AUTH_PORT}'
     environment:
       - PORT=$AUTH_PORT
+      - ADDRESS_EMAIL=$ADDRESS_EMAIL
+      - PASSWORD_EMAIL=$PASSWORD_EMAIL
+      - SMTP_ADDRESS_EMAIL=$SMTP_ADDRESS_EMAIL
+      - SMTP_PORT_EMAIL=$SMTP_PORT_EMAIL
       - DB_DIRECTORY=/app/db
     build:
       dockerfile: ./theteam_auth_service/Dockerfile

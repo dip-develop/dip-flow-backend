@@ -10,12 +10,16 @@ abstract class EmailAuthModel
   int get userId;
   String get email;
   String get password;
+  bool get isVerified;
   @override
   DateTime get dateCreated;
 
   EmailAuthModel._();
   factory EmailAuthModel([void Function(EmailAuthModelBuilder) updates]) =
       _$EmailAuthModel;
+
+  @BuiltValueHook(initializeBuilder: true)
+  static void _setDefaults(EmailAuthModelBuilder b) => b..isVerified = false;
 }
 
 abstract class AuthModel {

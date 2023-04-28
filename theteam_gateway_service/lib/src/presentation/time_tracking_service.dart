@@ -9,12 +9,12 @@ import '../generated/google/protobuf/empty.pb.dart';
 import '../generated/time_tracking_models.pb.dart';
 import '../generated/time_tracking_service.pbgrpc.dart';
 
-@Singleton()
+@singleton
 class TimeTrackingService extends TimeTrackingGateServiceBase {
   final TimeTrackingServiceClient _timeTrackingClient;
-  final AuthServiceClient _authClient;
+  final UserServiceClient _userClient;
 
-  TimeTrackingService(this._timeTrackingClient, this._authClient);
+  TimeTrackingService(this._timeTrackingClient, this._userClient);
 
   @override
   Future<TimeTrackReply> getTimeTrack(ServiceCall call, IdRequest request) =>
@@ -24,7 +24,7 @@ class TimeTrackingService extends TimeTrackingGateServiceBase {
   @override
   Future<TimeTracksReply> getTimeTracks(
           ServiceCall call, gate.GetTimeTrackRequest request) =>
-      _authClient
+      _userClient
           .getUser(Empty(), options: CallOptions(metadata: call.clientMetadata))
           .then((user) => _timeTrackingClient.getTimeTracks(GetTimeTrackRequest(
               userId: user.id,
@@ -35,7 +35,7 @@ class TimeTrackingService extends TimeTrackingGateServiceBase {
   @override
   Future<TimeTrackReply> addTimeTrack(
           ServiceCall call, gate.AddTimeTrackRequest request) =>
-      _authClient
+      _userClient
           .getUser(Empty(), options: CallOptions(metadata: call.clientMetadata))
           .then((user) => _timeTrackingClient.addTimeTrack(AddTimeTrackRequest(
               userId: user.id,

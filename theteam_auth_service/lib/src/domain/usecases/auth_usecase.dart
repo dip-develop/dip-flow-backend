@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:injectable/injectable.dart';
 
 import '../exceptions/exceptions.dart';
 import '../interfaces/interfaces.dart';
@@ -13,17 +14,12 @@ const _secretAccessJWT = 'hD4nsd84n';
 const _secretPassword = '3Jn5kaserjJnbf';
 const _issuer = 'theteam_auth_service';
 
-class UsersUseCaseImpl implements UsersUseCase {
+@Singleton(as: AuthUseCase)
+class AuthUseCaseImpl implements AuthUseCase {
   final DataBaseRepository _dataBaseRepository;
+  final EmailRepository _emailRepository;
 
-  UsersUseCaseImpl._(this._dataBaseRepository);
-
-  static Future<UsersUseCaseImpl> getInstance(
-      DataBaseRepository dataBaseRepository) {
-    return dataBaseRepository
-        .init()
-        .then((_) => UsersUseCaseImpl._(dataBaseRepository));
-  }
+  const AuthUseCaseImpl(this._dataBaseRepository, this._emailRepository);
 
   @override
   Future<SessionModel> refreshToken(String token) {
@@ -81,12 +77,15 @@ class UsersUseCaseImpl implements UsersUseCase {
                   ..password = _getPasswordHash(password)
                   ..dateCreated = DateTime.now().toUtc(),
               )))
-          .then((auth) => _dataBaseRepository.putSession(SessionModel(
-                (p0) => p0
-                  ..userId = auth.userId
-                  ..dateCreated = DateTime.now().toUtc()
-                  ..dateExpired = DateTime.now().add(Duration(days: 7)).toUtc(),
-              )));
+          .then((auth) {
+        _verifyEmail(email);
+        return _dataBaseRepository.putSession(SessionModel(
+          (p0) => p0
+            ..userId = auth.userId
+            ..dateCreated = DateTime.now().toUtc()
+            ..dateExpired = DateTime.now().add(Duration(days: 7)).toUtc(),
+        ));
+      });
     });
   }
 
@@ -131,6 +130,28 @@ class UsersUseCaseImpl implements UsersUseCase {
       .then((sessions) => _dataBaseRepository
           .deleteSessions(sessions.map((e) => e.id!).toList()));
 
+  void _verifyEmail(String email) {
+    _emailRepository.sendMail(
+        recipients: [email],
+        subject: 'TheTeam account verification',
+        html:
+            '<a href="https://theteam.run">Confirm email</a>').catchError(
+        (onError) {
+      print(onError.toString());
+    });
+  }
+
+  @override
+  int? getUserId(String token) {
+    final jwt = _parseToken(token, _secretAccessJWT);
+    final payload = jwt?.payload;
+    if (payload != null && payload is Map && payload.containsKey('user')) {
+      return int.tryParse(payload['user'] ?? '');
+    } else {
+      return null;
+    }
+  }
+
   String _generateToken(
       {required DateTime dateCreated,
       required DateTime dateExpired,
@@ -149,35 +170,6 @@ class UsersUseCaseImpl implements UsersUseCase {
     );
 
     return jwt.sign(SecretKey(secret), noIssueAt: false);
-  }
-
-  @override
-  Future<UserModel> getUser(String token) {
-    final userId = _getUserId(token);
-    if (userId == null) {
-      throw AuthException.wrongAuthData();
-    }
-    return _dataBaseRepository.getSessionsByUserId(userId).then((sessions) {
-      if (sessions.isEmpty) {
-        throw AuthException.wrongAuthData();
-      }
-      return _dataBaseRepository.getUser(userId).then((user) {
-        if (user == null) {
-          throw AuthException.wrongAuthData();
-        }
-        return user;
-      });
-    });
-  }
-
-  int? _getUserId(String token) {
-    final jwt = _parseToken(token, _secretAccessJWT);
-    final payload = jwt?.payload;
-    if (payload != null && payload is Map && payload.containsKey('user')) {
-      return int.tryParse(payload['user'] ?? '');
-    } else {
-      return null;
-    }
   }
 
   String _getPasswordHash(String password) {

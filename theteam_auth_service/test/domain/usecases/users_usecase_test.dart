@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:theteam_auth_service/objectbox.g.dart';
 import 'package:theteam_auth_service/src/data/repositories/database_repository.dart';
+import 'package:theteam_auth_service/src/data/repositories/email_repository.dart';
 import 'package:theteam_auth_service/src/domain/interfaces/interfaces.dart';
 import 'package:theteam_auth_service/src/domain/models/session_model.dart';
 import 'package:theteam_auth_service/src/domain/repositories/repositories.dart';
@@ -8,9 +12,11 @@ import 'package:test/test.dart';
 void main() {
   group('Users UseCase', () {
     test('Generate and check token', () async {
-      final DataBaseRepository dataBaseRepository = DataBaseRepositoryImpl();
-      final UsersUseCase usersUseCase =
-          await UsersUseCaseImpl.getInstance(dataBaseRepository);
+      final DataBaseRepository dataBaseRepository = DataBaseRepositoryImpl()
+        ..init();
+      final EmailRepository emailRepository = EmailRepositoryImpl();
+      final AuthUseCase usersUseCase =
+          AuthUseCaseImpl(dataBaseRepository, emailRepository);
 
       final dateCreated =
           DateTime.now().toUtc().add(Duration(days: -1, seconds: 1));

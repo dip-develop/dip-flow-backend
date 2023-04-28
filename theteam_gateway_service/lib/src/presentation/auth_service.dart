@@ -6,8 +6,9 @@ import 'package:injectable/injectable.dart';
 import '../generated/auth_models.pb.dart';
 import '../generated/auth_service.pbgrpc.dart';
 import '../generated/gate_service.pbgrpc.dart';
+import '../generated/google/protobuf/empty.pb.dart';
 
-@Singleton()
+@singleton
 class AuthService extends AuthGateServiceBase {
   final AuthServiceClient _authClient;
 
@@ -30,5 +31,16 @@ class AuthService extends AuthGateServiceBase {
   Future<AuthReply> refreshToken(
           ServiceCall call, RefreshTokenRequest request) =>
       _authClient.refreshToken(request,
+          options: CallOptions(metadata: call.clientMetadata));
+
+  @override
+  Future<Empty> restorePassword(
+          ServiceCall call, RestorePasswordRequest request) =>
+      _authClient.restorePassword(request,
+          options: CallOptions(metadata: call.clientMetadata));
+
+  @override
+  Future<Empty> verifyEmail(ServiceCall call, Empty request) =>
+      _authClient.verifyEmail(request,
           options: CallOptions(metadata: call.clientMetadata));
 }

@@ -1,8 +1,7 @@
 import '../models/models.dart';
 
 abstract class DataBaseRepository {
-  Future<void> init();
-
+  void init();
   Future<UserModel> putUser(UserModel user);
   Future<UserModel?> getUser(int id);
   Future<void> deleteUser(int id);

@@ -12,13 +12,14 @@ import '../entities/entities.dart';
 @Singleton(as: DataBaseRepository)
 class DataBaseRepositoryImpl implements DataBaseRepository {
   late final Store _db;
+
   @override
-  Future<void> init() {
+  @PostConstruct()
+  void init() {
     final directory = Platform.environment['DB_DIRECTORY'];
     _db = openStore(
       directory: directory,
     );
-    return Future.value();
   }
 
   @override

@@ -11,7 +11,7 @@ import '../generated/google/protobuf/timestamp.pb.dart';
 import '../generated/time_tracking_models.pb.dart';
 import '../generated/time_tracking_service.pbgrpc.dart';
 
-@Singleton()
+@singleton
 class TimeTrackingService extends TimeTrackingServiceBase {
   final TimeTrackingsUseCase _timeTrackings;
 

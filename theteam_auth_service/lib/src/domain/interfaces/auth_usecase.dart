@@ -1,6 +1,6 @@
 import '../models/models.dart';
 
-abstract class UsersUseCase {
+abstract class AuthUseCase {
   Future<SessionModel> refreshToken(String token);
   Future<SessionModel> signInByEmail(
       {required String email, required String password});
@@ -12,5 +12,5 @@ abstract class UsersUseCase {
   String generateRefreshToken(SessionModel session);
   String generateAccessToken(SessionModel session,
       {Duration duration = const Duration(hours: 1)});
-  Future<UserModel> getUser(String token);
+  int? getUserId(String token);
 }
