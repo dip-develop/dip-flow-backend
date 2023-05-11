@@ -14,7 +14,7 @@ services:
       - TIME_TRACKING_IP=service_time_tracking
       - TIME_TRACKING_PORT=$TIME_TRACKING_PORT
     build:
-      dockerfile: ./theteam_gateway_service/Dockerfile
+      dockerfile: ./gateway_service/Dockerfile
       context: '.'
     restart: always
     networks:
@@ -22,8 +22,8 @@ services:
 
   service_auth:
     container_name: service_auth
-    ports:
-      - '${AUTH_PORT}:${AUTH_PORT}'
+    expose:
+      - $AUTH_PORT
     environment:
       - PORT=$AUTH_PORT
       - ADDRESS_EMAIL=$ADDRESS_EMAIL
@@ -32,7 +32,7 @@ services:
       - SMTP_PORT_EMAIL=$SMTP_PORT_EMAIL
       - DB_DIRECTORY=/app/db
     build:
-      dockerfile: ./theteam_auth_service/Dockerfile
+      dockerfile: ./auth_service/Dockerfile
       context: '.'
     volumes:
       - auth_db_data:/app/db
@@ -42,13 +42,13 @@ services:
 
   service_time_tracking:
     container_name: service_time_tracking
-    ports:
-      - '${TIME_TRACKING_PORT}:${TIME_TRACKING_PORT}'
+    expose:
+      - $TIME_TRACKING_PORT
     environment:
       - PORT=$TIME_TRACKING_PORT
       - DB_DIRECTORY=/app/db
     build:
-      dockerfile: ./theteam_time_tracking_service/Dockerfile
+      dockerfile: ./time_tracking_service/Dockerfile
       context: '.'
     volumes:
       - time_tracking_db_data:/app/db

@@ -1,0 +1,29 @@
+name: time_tracking_service
+summary: 'TheTeam: a tool for modern teams.'
+description: |
+  TheTeam is the ultimate solution for team management.
+  Whether you are a freelancer, a developer, an HR manager, or a headhunter, you can benefit from our powerful and user-friendly application that lets you track time, create reports, manage projects, and more.
+  You can access our service from any device and any operating system, and enjoy our beautiful graphs that visualize your progress and performance.
+  Plus, if you are an individual user or a small team, you can use our service for free forever. No hidden fees, no strings attached.
+  Join TheTeam today and take your team to the next level.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=3.0.0 <3.1.0'
+
+dependencies:
+  grpc: ^3.1.0
+  objectbox: ^2.0.0
+  get_it: ^7.2.0
+  injectable: ^2.1.0
+  built_value: ^8.4.4
+  built_collection: ^5.1.1
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
+  build_runner: ^2.3.3
+  objectbox_generator: ^2.0.0
+  injectable_generator: ^2.1.4
+  built_value_generator: ^8.4.4

@@ -1,0 +1,9 @@
+download/
+objectbox/
+lib/src/generated/
+.dart_tool/
+*.lock
+*.g.dart
+**.config.dart
+**/objectbox.*
+**libobjectbox.**
