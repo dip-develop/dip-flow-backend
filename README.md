@@ -17,20 +17,20 @@ git submodule update --init --recursive --remote
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "musmula_auth_service",
-            "cwd": "musmula_auth_service",
+            "name": "user_service",
+            "cwd": "user_service",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "musmula_gateway_service",
-            "cwd": "musmula_gateway_service",
+            "name": "gateway_service",
+            "cwd": "gateway_service",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "musmula_time_tracking_service",
-            "cwd": "musmula_time_tracking_service",
+            "name": "activity_service",
+            "cwd": "activity_service",
             "request": "launch",
             "type": "dart"
         }       

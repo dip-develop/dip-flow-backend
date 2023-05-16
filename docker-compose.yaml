@@ -9,10 +9,10 @@ services:
       - .env
     environment:
       - PORT=$GATEWAY_PORT
-      - AUTH_IP=service_auth
-      - AUTH_PORT=$AUTH_PORT
-      - TIME_TRACKING_IP=service_time_tracking
-      - TIME_TRACKING_PORT=$TIME_TRACKING_PORT
+      - USER_SERVICE_IP=service_user
+      - USER_SERVICE_PORT=$USER_SERVICE_PORT
+      - ACTIVITY_SERVICE_IP=service_activity
+      - ACTIVITY_SERVICE_PORT=$ACTIVITY_SERVICE_PORT
     build:
       dockerfile: ./gateway_service/Dockerfile
       context: '.'
@@ -20,19 +20,19 @@ services:
     networks:
       - network
 
-  service_auth:
-    container_name: service_auth
+  service_user:
+    container_name: service_user
     expose:
-      - $AUTH_PORT
+      - $USER_SERVICE_PORT
     environment:
-      - PORT=$AUTH_PORT
+      - PORT=$USER_SERVICE_PORT
       - ADDRESS_EMAIL=$ADDRESS_EMAIL
       - PASSWORD_EMAIL=$PASSWORD_EMAIL
       - SMTP_ADDRESS_EMAIL=$SMTP_ADDRESS_EMAIL
       - SMTP_PORT_EMAIL=$SMTP_PORT_EMAIL
       - DB_DIRECTORY=/app/db
     build:
-      dockerfile: ./auth_service/Dockerfile
+      dockerfile: ./user_service/Dockerfile
       context: '.'
     volumes:
       - auth_db_data:/app/db
@@ -40,15 +40,15 @@ services:
     networks:
       - network
 
-  service_time_tracking:
-    container_name: service_time_tracking
+  service_activity:
+    container_name: service_activity
     expose:
-      - $TIME_TRACKING_PORT
+      - $ACTIVITY_SERVICE_PORT
     environment:
-      - PORT=$TIME_TRACKING_PORT
+      - PORT=$ACTIVITY_SERVICE_PORT
       - DB_DIRECTORY=/app/db
     build:
-      dockerfile: ./time_tracking_service/Dockerfile
+      dockerfile: ./activity_service/Dockerfile
       context: '.'
     volumes:
       - time_tracking_db_data:/app/db
