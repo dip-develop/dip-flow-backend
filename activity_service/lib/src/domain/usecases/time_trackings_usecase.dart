@@ -35,14 +35,40 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
     DateTime? end,
     String? search,
   }) =>
-      _dataBaseRepository.getTimeTracksByUserId(
-        id: userId,
-        offset: offset,
-        limit: limit,
-        start: start,
-        end: end,
-        search: search,
-      );
+      _dataBaseRepository
+          .getTimeTracksByUserId(
+            id: userId,
+            offset: offset,
+            limit: limit,
+            start: start,
+            end: end,
+            search: search,
+          )
+          .then((value) => PaginationModel(
+              count: value.count,
+              offset: value.offset,
+              limit: value.limit,
+              items: value.items
+                  .map((e) => e.rebuild((p0) => p0
+                    ..tracks = ListBuilder(p0.tracks.build().where((p0) {
+                      if (start == null && end == null) return true;
+                      final condition = start != null && end != null
+                          ? ((p0.start == start || p0.start.isAfter(start)) &&
+                                  (p0.end == null ||
+                                      p0.end == end ||
+                                      p0.start.isBefore(end))) &&
+                              (p0.end == null ||
+                                  p0.end == end ||
+                                  p0.end!.isBefore(end))
+                          : start != null
+                              ? p0.start == start || p0.start.isAfter(start)
+                              : p0.end == null ||
+                                  p0.end == end ||
+                                  p0.end!.isBefore(end!);
+
+                      return condition;
+                    }))))
+                  .toList()));
 
   @override
   Future<TimeTrackingModel> addTimeTracking({
