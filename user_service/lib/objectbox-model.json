@@ -117,7 +117,7 @@
     },
     {
       "id": "7:3762607774246853516",
-      "lastPropertyId": "4:7760355511825858875",
+      "lastPropertyId": "5:3271446815276265442",
       "name": "SessionEntity",
       "properties": [
         {
@@ -143,6 +143,11 @@
           "id": "4:7760355511825858875",
           "name": "dateExpired",
           "type": 10
+        },
+        {
+          "id": "5:3271446815276265442",
+          "name": "deviceId",
+          "type": 9
         }
       ],
       "relations": []

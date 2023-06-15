@@ -27,9 +27,9 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
       Future.value(_db.box<ProfileEntity>().get(id)?.toModel());
 
   @override
-  Future<ProfileModel> putProfile(ProfileModel user) =>
-      Future.value(_db.box<ProfileEntity>().put(ProfileEntity.fromModel(user)))
-          .then((value) => user.rebuild((p0) => p0..id = value));
+  Future<ProfileModel> putProfile(ProfileModel profile) => Future.value(
+          _db.box<ProfileEntity>().put(ProfileEntity.fromModel(profile)))
+      .then((value) => profile.rebuild((p0) => p0..id = value));
 
   @override
   Future<void> deleteProfile(int id) =>
@@ -40,9 +40,11 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
       Future.value(_db.box<SessionEntity>().get(id)?.toModel());
 
   @override
-  Future<List<SessionModel>> getSessionsByProfileId(int id) {
-    QueryBuilder<SessionEntity> query = _db.box<SessionEntity>().query()
-      ..link(SessionEntity_.user, ProfileEntity_.id.equals(id));
+  Future<List<SessionModel>> getSessionsBy(int profileId, String deviceId) {
+    QueryBuilder<SessionEntity> query = _db
+        .box<SessionEntity>()
+        .query(SessionEntity_.deviceId.equals(deviceId))
+      ..link(SessionEntity_.user, ProfileEntity_.id.equals(profileId));
     return Future.value(query.build().find())
         .then((value) => value.map((e) => e.toModel()).toList());
   }

@@ -8,6 +8,7 @@ class SessionEntity {
   @Id()
   int id;
   final user = ToOne<ProfileEntity>();
+  final String deviceId;
   @Property(type: PropertyType.date)
   final DateTime dateCreated;
   @Property(type: PropertyType.date)
@@ -15,6 +16,7 @@ class SessionEntity {
 
   SessionEntity({
     this.id = 0,
+    required this.deviceId,
     required this.dateCreated,
     required this.dateExpired,
   });
@@ -22,11 +24,13 @@ class SessionEntity {
   SessionModel toModel() => SessionModel((p0) => p0
     ..id = id
     ..userId = user.targetId
+    ..deviceId = deviceId
     ..dateCreated = dateCreated
     ..dateExpired = dateExpired);
 
   factory SessionEntity.fromModel(SessionModel model) => SessionEntity(
         id: model.id ?? 0,
+        deviceId: model.deviceId,
         dateCreated: model.dateCreated,
         dateExpired: model.dateExpired,
       )..user.targetId = model.userId;

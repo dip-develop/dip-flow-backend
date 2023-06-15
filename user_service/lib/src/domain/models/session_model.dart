@@ -6,6 +6,7 @@ abstract class SessionModel
     implements Built<SessionModel, SessionModelBuilder> {
   int? get id;
   int get userId;
+  String get deviceId;
   DateTime get dateCreated;
   DateTime get dateExpired;
 

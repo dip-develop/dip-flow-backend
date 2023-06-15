@@ -8,6 +8,7 @@ import '../domain/interfaces/interfaces.dart';
 import '../generated/auth_models.pb.dart';
 import '../generated/auth_service.pbgrpc.dart';
 import '../generated/google/protobuf/empty.pb.dart';
+import 'utils.dart';
 
 @singleton
 class AuthService extends AuthServiceBase {
@@ -19,23 +20,35 @@ class AuthService extends AuthServiceBase {
   Future<AuthReply> signInByEmail(
       ServiceCall call, SignInEmailRequest request) {
     final completer = Completer<AuthReply>();
-    _authUseCase
-        .signInByEmail(email: request.email, password: request.password)
-        .then((session) {
-      final accessToken = _authUseCase.generateAccessToken(session);
-      final refreshToken = _authUseCase.generateRefreshToken(session);
+    final deviceId = Utils.getDeviceId(call);
+    if (deviceId == null) {
+      final error = AuthException.wrongAuthData();
+      call.sendTrailers(
+          status: StatusCode.invalidArgument, message: error.message);
+      completer.completeError(error);
+    } else {
+      _authUseCase
+          .signInByEmail(
+        email: request.email,
+        password: request.password,
+        deviceId: deviceId,
+      )
+          .then((session) {
+        final accessToken = _authUseCase.generateAccessToken(session);
+        final refreshToken = _authUseCase.generateRefreshToken(session);
 
-      completer.complete(
-          AuthReply(accessToken: accessToken, refreshToken: refreshToken));
-    }).catchError((onError) {
-      if (onError is AuthException) {
-        call.sendTrailers(
-            status: StatusCode.unauthenticated, message: onError.message);
-      } else {
-        call.sendTrailers(status: StatusCode.unknown);
-      }
-      completer.completeError(onError);
-    });
+        completer.complete(
+            AuthReply(accessToken: accessToken, refreshToken: refreshToken));
+      }).catchError((onError) {
+        if (onError is AuthException) {
+          call.sendTrailers(
+              status: StatusCode.unauthenticated, message: onError.message);
+        } else {
+          call.sendTrailers(status: StatusCode.unknown);
+        }
+        completer.completeError(onError);
+      });
+    }
 
     return completer.future;
   }
@@ -44,26 +57,35 @@ class AuthService extends AuthServiceBase {
   Future<AuthReply> signUpByEmail(
       ServiceCall call, SignUpEmailRequest request) {
     final completer = Completer<AuthReply>();
-    _authUseCase
-        .signUpByEmail(
-            name: request.name,
-            email: request.email,
-            password: request.password)
-        .then((session) {
-      final accessToken = _authUseCase.generateAccessToken(session);
-      final refreshToken = _authUseCase.generateRefreshToken(session);
-      completer.complete(
-          AuthReply(accessToken: accessToken, refreshToken: refreshToken));
-    }).catchError((onError) {
-      if (onError is AuthException) {
-        call.sendTrailers(
-            status: StatusCode.unauthenticated, message: onError.message);
-      } else {
-        call.sendTrailers(status: StatusCode.unknown);
-      }
-      completer.completeError(onError);
-    });
-
+    final deviceId = Utils.getDeviceId(call);
+    if (deviceId == null) {
+      final error = AuthException.wrongAuthData();
+      call.sendTrailers(
+          status: StatusCode.invalidArgument, message: error.message);
+      completer.completeError(error);
+    } else {
+      _authUseCase
+          .signUpByEmail(
+        name: request.name,
+        email: request.email,
+        password: request.password,
+        deviceId: deviceId,
+      )
+          .then((session) {
+        final accessToken = _authUseCase.generateAccessToken(session);
+        final refreshToken = _authUseCase.generateRefreshToken(session);
+        completer.complete(
+            AuthReply(accessToken: accessToken, refreshToken: refreshToken));
+      }).catchError((onError) {
+        if (onError is AuthException) {
+          call.sendTrailers(
+              status: StatusCode.unauthenticated, message: onError.message);
+        } else {
+          call.sendTrailers(status: StatusCode.unknown);
+        }
+        completer.completeError(onError);
+      });
+    }
     return completer.future;
   }
 
@@ -85,7 +107,6 @@ class AuthService extends AuthServiceBase {
       }
       completer.completeError(onError);
     });
-
     return completer.future;
   }
 

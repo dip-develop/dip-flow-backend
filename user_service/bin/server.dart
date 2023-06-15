@@ -18,12 +18,10 @@ void main(List<String> args) async {
 
   final serverPort = int.tryParse(Platform.environment['PORT'] ?? '') ?? 8081;
   print('Starting the auth server on port $serverPort');
-  final server = Server(
-    [GetIt.I<AuthService>(), GetIt.I<UserService>()],
-    List<Interceptor>.empty(),
-    /* CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]), */
-  );
+  final server = Server.create(services: [
+    GetIt.I<AuthService>(),
+    GetIt.I<UserService>(),
+  ]);
   await server.serve(port: serverPort);
-
   print('Server started');
 }

@@ -34,25 +34,30 @@ class AuthUseCaseImpl implements AuthUseCase {
               (p0) => p0
                 ..id = session?.id
                 ..userId = session?.userId
+                ..deviceId = session?.deviceId
                 ..dateCreated = DateTime.now().toUtc()
                 ..dateExpired = DateTime.now().add(Duration(days: 7)).toUtc(),
             )));
   }
 
   @override
-  Future<SessionModel> signInByEmail(
-      {required String email, required String password}) {
+  Future<SessionModel> signInByEmail({
+    required String email,
+    required String password,
+    required String deviceId,
+  }) {
     return _dataBaseRepository.getAuthByEmail(email).then((auth) {
       if (auth == null) return Future.error(AuthException.wrongEmailData());
       if (_getPasswordHash(password) != auth.password) {
         return Future.error(AuthException.wrongEmailData());
       }
       return _dataBaseRepository
-          .getSessionsByProfileId(auth.userId)
+          .getSessionsBy(auth.userId, deviceId)
           .then((value) => _dataBaseRepository.putSession(SessionModel(
                 (p0) => p0
                   ..id = value.isNotEmpty ? value.first.id : null
                   ..userId = auth.userId
+                  ..deviceId = deviceId
                   ..dateCreated = DateTime.now().toUtc()
                   ..dateExpired = DateTime.now().add(Duration(days: 7)).toUtc(),
               )));
@@ -60,8 +65,12 @@ class AuthUseCaseImpl implements AuthUseCase {
   }
 
   @override
-  Future<SessionModel> signUpByEmail(
-      {required String name, required String email, required String password}) {
+  Future<SessionModel> signUpByEmail({
+    required String name,
+    required String email,
+    required String password,
+    required String deviceId,
+  }) {
     return _dataBaseRepository.getAuthByEmail(email).then((auth) {
       if (auth != null) return Future.error(AuthException.doubleAuthData());
       return _dataBaseRepository
@@ -82,6 +91,7 @@ class AuthUseCaseImpl implements AuthUseCase {
         return _dataBaseRepository.putSession(SessionModel(
           (p0) => p0
             ..userId = auth.userId
+            ..deviceId = deviceId
             ..dateCreated = DateTime.now().toUtc()
             ..dateExpired = DateTime.now().add(Duration(days: 7)).toUtc(),
         ));

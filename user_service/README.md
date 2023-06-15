@@ -6,7 +6,7 @@
 
 ## Getting Started
 ```bash
-dart pub global activate protoc_plugin
+dart pub global activate protoc_plugin 20.0.1
 bash <(curl -s https://raw.githubusercontent.com/objectbox/objectbox-dart/main/install.sh) --sync
 dart pub get
 ```

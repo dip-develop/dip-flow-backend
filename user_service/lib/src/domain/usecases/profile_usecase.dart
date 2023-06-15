@@ -13,12 +13,12 @@ class ProfileUseCaseImpl implements ProfileUseCase {
   const ProfileUseCaseImpl(this._authUseCase, this._dataBaseRepository);
 
   @override
-  Future<ProfileModel> getProfile(String token) {
+  Future<ProfileModel> getProfile(String token, String deviceId) {
     final userId = _authUseCase.getUserId(token);
     if (userId == null) {
       throw AuthException.wrongAuthData();
     }
-    return _dataBaseRepository.getSessionsByProfileId(userId).then((sessions) {
+    return _dataBaseRepository.getSessionsBy(userId, deviceId).then((sessions) {
       if (sessions.isEmpty) {
         throw AuthException.wrongAuthData();
       }

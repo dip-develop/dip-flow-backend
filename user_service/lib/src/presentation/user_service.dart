@@ -10,6 +10,7 @@ import '../generated/google/protobuf/empty.pb.dart';
 import '../generated/google/protobuf/timestamp.pb.dart';
 import '../generated/user_models.pb.dart';
 import '../generated/user_service.pbgrpc.dart';
+import 'utils.dart';
 
 @singleton
 class UserService extends UserServiceBase {
@@ -21,14 +22,17 @@ class UserService extends UserServiceBase {
   @override
   Future<UserReply> getUser(ServiceCall call, Empty request) {
     final completer = Completer<UserReply>();
-    final token = _getToken(call);
-    if (token == null || !_authUseCase.checkAccessToken(token)) {
+    final token = Utils.getToken(call);
+    final deviceId = Utils.getDeviceId(call);
+    if (token == null ||
+        deviceId == null ||
+        !_authUseCase.checkAccessToken(token)) {
       final error = AuthException.wrongAuthData();
       call.sendTrailers(
           status: StatusCode.invalidArgument, message: error.message);
       completer.completeError(error);
     } else {
-      _userUseCase.getProfile(token).then((user) {
+      _userUseCase.getProfile(token, deviceId).then((user) {
         completer.complete(UserReply(
             id: user.id,
             name: user.name,
@@ -50,15 +54,18 @@ class UserService extends UserServiceBase {
   @override
   Future<Empty> updateUser(ServiceCall call, UserRequest request) {
     final completer = Completer<Empty>();
-    final token = _getToken(call);
-    if (token == null || !_authUseCase.checkAccessToken(token)) {
+    final token = Utils.getToken(call);
+    final deviceId = Utils.getDeviceId(call);
+    if (token == null ||
+        deviceId == null ||
+        !_authUseCase.checkAccessToken(token)) {
       final error = AuthException.wrongAuthData();
       call.sendTrailers(
           status: StatusCode.invalidArgument, message: error.message);
       completer.completeError(error);
     } else {
       _userUseCase
-          .getProfile(token)
+          .getProfile(token, deviceId)
           .then((value) => _userUseCase.updateProfile(value.rebuild(
                 (p0) => p0
                   ..name = request.hasName() ? request.name : value.name
@@ -82,18 +89,6 @@ class UserService extends UserServiceBase {
 
     return completer.future;
   }
-
-  String? _getToken(ServiceCall call) => (call.clientMetadata
-              ?.map((key, value) => MapEntry(key.toLowerCase(), value))
-              .containsKey('authorization') ??
-          false)
-      ? call.clientMetadata
-          ?.map((key, value) => MapEntry(key.toLowerCase(), value))[
-              'authorization']
-          ?.replaceAll('Bearer', '')
-          .replaceAll('bearer', '')
-          .trim()
-      : null;
 
   @override
   Future<Empty> deleteUser(ServiceCall call, Empty request) {

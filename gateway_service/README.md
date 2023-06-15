@@ -6,7 +6,7 @@
 
 ## Getting Started
 ```bash
-dart pub global activate protoc_plugin
+dart pub global activate protoc_plugin 20.0.1
 dart pub get
 ```
 

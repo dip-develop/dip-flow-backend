@@ -18,16 +18,11 @@ void main(List<String> args) async {
 
   final port = int.tryParse(Platform.environment['PORT'] ?? '') ?? 8080;
   print('Starting the gateaway server on port $port');
-  final server = Server(
-    [
-      GetIt.I<AuthService>(),
-      GetIt.I<ProfileService>(),
-      GetIt.I<TimeTrackingService>(),
-    ],
-    List<Interceptor>.empty(),
-    /* CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]), */
-  );
+  final server = Server.create(services: [
+    GetIt.I<AuthService>(),
+    GetIt.I<ProfileService>(),
+    GetIt.I<TimeTrackingService>(),
+  ]);
   await server.serve(port: port);
-
   print('Server started');
 }
