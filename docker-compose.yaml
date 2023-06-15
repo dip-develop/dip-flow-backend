@@ -35,7 +35,7 @@ services:
       dockerfile: ./user_service/Dockerfile
       context: '.'
     volumes:
-      - auth_db_data:/app/db
+      - user_db_data:/app/db
     restart: always
     networks:
       - network
@@ -51,14 +51,14 @@ services:
       dockerfile: ./activity_service/Dockerfile
       context: '.'
     volumes:
-      - time_tracking_db_data:/app/db
+      - service_activity_db_data:/app/db
     restart: always
     networks:
       - network
 
 volumes:
-  auth_db_data: {}
-  time_tracking_db_data: {}
+  user_db_data: {}
+  service_activity_db_data: {}
 
 networks:
   network:

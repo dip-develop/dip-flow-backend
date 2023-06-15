@@ -48,7 +48,7 @@ RUN protoc --dart_out=grpc:lib/src/generated -Iprotos \
     protos/google/protobuf/descriptor.proto \
     protos/google/protobuf/empty.proto \
     protos/google/protobuf/timestamp.proto
-RUN dart run build_runner build -d --no-fail-on-severe
+RUN dart run build_runner build -d
 RUN dart compile exe bin/server.dart -o bin/server
 
 FROM scratch

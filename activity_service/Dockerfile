@@ -43,11 +43,12 @@ RUN protoc --dart_out=grpc:lib/src/generated -Iprotos \
     protos/google/protobuf/empty.proto \
     protos/google/protobuf/timestamp.proto
 RUN bash -c 'bash <(curl -s https://raw.githubusercontent.com/objectbox/objectbox-dart/main/install.sh) --sync --quiet'
-RUN dart run build_runner build -d --no-fail-on-severe
+RUN dart run build_runner build -d
 RUN dart compile exe bin/server.dart -o bin/server
 
 FROM ubuntu:latest
 WORKDIR "/app"
 COPY --from=build /app/bin/server /app/bin/
-COPY --from=build /app/lib/libobjectbox.so /app/lib/
+RUN bash -c 'bash <(curl -s https://raw.githubusercontent.com/objectbox/objectbox-dart/main/install.sh) --sync --quiet'
+#COPY --from=build /app/lib/libobjectbox.so /app/lib/
 CMD ["/app/bin/server"]
