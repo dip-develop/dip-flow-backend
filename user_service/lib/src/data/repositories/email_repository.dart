@@ -27,7 +27,7 @@ class EmailRepositoryImpl implements EmailRepository {
       required String html}) {
     final email = Platform.environment['ADDRESS_EMAIL'] ?? '';
     final message = Message()
-      ..from = Address(email, 'TheTeam')
+      ..from = Address(email, 'Collabster')
       ..recipients.addAll(recipients)
       ..subject = subject
       ..html = html;

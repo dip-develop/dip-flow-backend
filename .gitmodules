@@ -1,12 +1,12 @@
 [submodule "user_service_protos"]
 	path = user_service/protos
-	url = git@ssh.dev.azure.com:v3/dipdev/TheTeam/Protos
+	url = git@ssh.dev.azure.com:v3/dipdev/Collabster/Protos
 	branch = main
 [submodule "gateway_service_protos"]
 	path = gateway_service/protos
-	url = git@ssh.dev.azure.com:v3/dipdev/TheTeam/Protos
+	url = git@ssh.dev.azure.com:v3/dipdev/Collabster/Protos
 	branch = main
 [submodule "activity_service_protos"]
 	path = activity_service/protos
-	url = git@ssh.dev.azure.com:v3/dipdev/TheTeam/Protos
+	url = git@ssh.dev.azure.com:v3/dipdev/Collabster/Protos
 	branch = main

@@ -143,9 +143,9 @@ class AuthUseCaseImpl implements AuthUseCase {
   void _verifyEmail(String email) {
     _emailRepository.sendMail(
         recipients: [email],
-        subject: 'TheTeam account verification',
+        subject: 'Collabster account verification',
         html:
-            '<a href="https://theteam.run">Confirm email</a>').catchError(
+            '<a href="https://collabster.run">Confirm email</a>').catchError(
         (onError) {
       print(onError.toString());
     });

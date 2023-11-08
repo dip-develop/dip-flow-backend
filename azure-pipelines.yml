@@ -1,14 +1,14 @@
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: SSH@0
-  inputs:
-    sshEndpoint: 'DipDev Server'
-    runOptions: 'commands'
-    commands: 'cd workspace && cd theteam_backend && git reset --hard HEAD && git checkout main && git pull origin main && git submodule update --init --recursive --remote --force && docker-compose up -d --build && exit'
-    readyTimeout: '20000'
-    failOnStdErr: false
+  - task: SSH@0
+    inputs:
+      sshEndpoint: "DipDev Server"
+      runOptions: "commands"
+      commands: "cd workspace && cd collabster_backend && git reset --hard HEAD && git checkout main && git pull origin main && git submodule update --init --recursive --remote --force && docker-compose up -d --build && exit"
+      readyTimeout: "20000"
+      failOnStdErr: false
