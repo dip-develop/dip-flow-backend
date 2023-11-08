@@ -32,6 +32,10 @@ class EmailRepositoryImpl implements EmailRepository {
       ..subject = subject
       ..html = html;
 
-    return send(message, _smtp);
+    if ((_smtp.username?.isNotEmpty ?? false) &&
+        (_smtp.password?.isNotEmpty ?? false)) {
+      return send(message, _smtp);
+    }
+    return Future.value();
   }
 }
