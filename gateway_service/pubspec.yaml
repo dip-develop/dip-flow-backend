@@ -13,12 +13,12 @@ environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
-  grpc: ^3.2.0
-  get_it: ^7.2.0
-  injectable: ^2.1.2
+  grpc: ^3.2.4
+  get_it: ^7.6.4
+  injectable: ^2.3.2
 
 dev_dependencies:
-  lints: ^2.1.1
-  test: ^1.24.3
-  build_runner: ^2.4.5
-  injectable_generator: ^2.1.6
+  lints: ^3.0.0
+  test: ^1.24.9
+  build_runner: ^2.4.6
+  injectable_generator: ^2.4.1
