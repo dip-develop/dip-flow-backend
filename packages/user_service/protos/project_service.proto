@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "project_models.proto";
+import "base_models.proto";
+
+package project;
+
+service ProjectService {
+
+  rpc GetProject(base.models.IdRequest)
+      returns (project.models.ProjectReply) {}
+
+  rpc GetProjects(base.models.FilterRequest)
+      returns (project.models.ProjectsReply) {}
+
+  rpc AddProject(project.models.AddProjectRequest)
+      returns (project.models.ProjectReply) {}
+
+  rpc UpdateProject(project.models.UpdateProjectRequest)
+      returns (project.models.ProjectReply) {}
+
+  rpc DeleteProject(base.models.IdRequest) returns (google.protobuf.Empty) {}
+}

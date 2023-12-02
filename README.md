@@ -4,6 +4,14 @@
 
 ## A Collabster Backend with Micro Service Arhitecture
 
+## Quick start
+
+```bash
+sh ./generate.sh
+```
+
+## Or manual getting Started
+
 ### Get last datas
 
 ```bash

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "task_models.proto";
+import "base_models.proto";
+
+package task;
+
+service TaskService {
+
+  rpc GetTask(base.models.IdRequest) returns (task.models.TaskReply) {}
+
+  rpc GetTasks(base.models.FilterRequest) returns (task.models.TasksReply) {}
+
+  rpc AddTask(task.models.AddTaskRequest) returns (task.models.TaskReply) {}
+
+  rpc UpdateTask(task.models.UpdateTaskRequest)
+      returns (task.models.TaskReply) {}
+
+  rpc DeleteTask(base.models.IdRequest) returns (google.protobuf.Empty) {}
+}

@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package time_tracking.models;
+
+message AddTimeTrackRequest {
+  uint32 userId = 1;
+  optional uint32 taskId = 2;
+  optional string title = 3;
+  optional string description = 4;
+}
+
+message UpdateTimeTrackRequest {
+  uint32 id = 1;
+  optional uint32 taskId = 2;
+  optional string title = 3;
+  optional string description = 4;
+}
+
+message DeleteTrackRequest {
+  uint32 id = 1;
+  uint32 trackId = 2;
+}
+
+message TimeTracksReply {
+  uint32 count = 1;
+  uint32 limit = 2;
+  uint32 offset = 3;
+  repeated TimeTrackReply timeTracks = 4;
+}
+
+message TimeTrackReply {
+  uint32 id = 1;
+  uint32 userId = 2;
+  optional uint32 taskId = 3;
+  optional string title = 4;
+  optional string description = 5;
+  repeated TrackReply tracks = 6;
+}
+
+message TracksReply {
+  uint32 count = 1;
+  uint32 limit = 2;
+  uint32 offset = 3;
+  repeated TrackReply tracks = 4;
+}
+
+message TrackReply {
+  uint32 id = 1;
+  google.protobuf.Timestamp start = 2;
+  optional google.protobuf.Timestamp end = 3;
+}
