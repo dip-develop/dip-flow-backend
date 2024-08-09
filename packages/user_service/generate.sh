@@ -2,6 +2,7 @@
 
 dart pub global activate protoc_plugin
 dart pub get
+dart pub upgrade
 
 mkdir -p lib/src/generated
 protoc --dart_out=grpc:lib/src/generated -Iprotos \

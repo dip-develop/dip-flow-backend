@@ -16,4 +16,6 @@ abstract class DataBaseRepository {
   Future<void> deleteTimeTrack(int id);
   Future<void> putTrack(TrackModel track);
   Future<void> deleteTrack(int id);
+
+  void dispose();
 }

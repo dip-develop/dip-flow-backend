@@ -16,8 +16,4 @@ README.md
 **/*.g.dart
 **/lib/src/generated/
 **/bin/server.config.dart
-**/objectbox/
-**/download/
 **/**.config.dart
-**/objectbox.*
-**/**libobjectbox.**

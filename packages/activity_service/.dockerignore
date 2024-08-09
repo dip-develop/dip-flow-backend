@@ -1,8 +1,6 @@
 .dockerignore
 Dockerfile
 build/
-download/
-objectbox/
 lib/src/generated/
 .dart_tool/
 .git/
@@ -13,5 +11,3 @@ lib/src/generated/
 *.lock
 *.g.dart
 **.config.dart
-**/objectbox.*
-**libobjectbox.**
