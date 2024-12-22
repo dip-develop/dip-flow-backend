@@ -1,6 +1,5 @@
 .gitignore
 .dockerignore
-azure-pipelines.yml
 README.md
 .vscode/
 .env

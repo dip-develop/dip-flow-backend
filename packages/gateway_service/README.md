@@ -14,7 +14,7 @@ sh ./generate.sh
 
 Windows
 
-```cmd
+```bash
 ./generate.bat
 ```
 

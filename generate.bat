@@ -1,6 +1,5 @@
 @echo off
 
-git "submodule" "update" "--init" "--recursive" "--remote"
 cd "packages/"
 cd "activity_service/"
 "%CD%\generate.bat"

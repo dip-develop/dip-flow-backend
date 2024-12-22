@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "base_models.proto";
+import "gate_models.proto";
+import "auth_models.proto";
+import "user_models.proto";
+import "time_tracking_models.proto";
+
+package gate;
+
+service AuthGateService {
+  rpc SignInByEmail(auth.models.SignInEmailRequest)
+      returns (auth.models.AuthReply) {
+  }
+
+  rpc SignUpByEmail(auth.models.SignUpEmailRequest)
+      returns (auth.models.AuthReply) {
+  }
+
+  rpc RefreshToken(auth.models.RefreshTokenRequest)
+      returns (auth.models.AuthReply) {
+  }
+
+  rpc RestorePassword(auth.models.RestorePasswordRequest)
+      returns (google.protobuf.Empty) {
+  }
+
+  rpc VerifyEmail(google.protobuf.Empty)
+      returns (google.protobuf.Empty) {
+  }
+}
+
+service ProfileGateService {
+  rpc GetProfile(google.protobuf.Empty) returns (gate.models.ProfileReply) {
+  }
+
+  rpc UpdateProfile(user.models.UserRequest) returns (google.protobuf.Empty) {
+  }
+
+  rpc DeleteProfile(google.protobuf.Empty) returns (google.protobuf.Empty) {
+  }
+}
+
+service TimeTrackingGateService {
+  rpc GetTimeTrack(base.models.IdRequest)
+      returns (time_tracking.models.TimeTrackReply) {
+  }
+
+  rpc GetTimeTracks(gate.models.FilterRequest)
+      returns (time_tracking.models.TimeTracksReply) {
+  }
+
+  rpc AddTimeTrack(gate.models.AddTimeTrackRequest)
+      returns (time_tracking.models.TimeTrackReply) {
+  }
+
+  rpc UpdateTimeTrack(time_tracking.models.UpdateTimeTrackRequest)
+      returns (time_tracking.models.TimeTrackReply) {
+  }
+
+  rpc DeleteTimeTrack(base.models.IdRequest) returns (google.protobuf.Empty) {
+  }
+
+  // Track
+
+  rpc GetTracks(gate.models.FilterRequest)
+      returns (time_tracking.models.TracksReply) {
+  }
+
+  rpc StartTrack(base.models.IdRequest)
+      returns (time_tracking.models.TimeTrackReply) {
+  }
+
+  rpc StopTrack(base.models.IdRequest)
+      returns (time_tracking.models.TimeTrackReply) {
+  }
+
+  rpc DeleteTrack(time_tracking.models.DeleteTrackRequest)
+      returns (time_tracking.models.TimeTrackReply) {
+  }
+}

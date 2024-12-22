@@ -1,6 +1,5 @@
 #! /bin/bash
 
-git submodule update --init --recursive --remote
 cd packages/
 cd activity_service/
 sh ./generate.sh

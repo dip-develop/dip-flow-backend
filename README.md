@@ -14,20 +14,15 @@ dart pub global activate melos
 ## Quick start
 
 Linux and Mac
+
 ```bash
 sh ./generate.sh
 ```
+
 Windows
-```cmd
-./generate.bat
-```
-
-## Or manual getting Started
-
-### Get last datas
 
 ```bash
-git submodule update --init --recursive --remote
+./generate.bat
 ```
 
 #### VSCode config

@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import '../domain/exceptions/exceptions.dart';
 import '../domain/interfaces/interfaces.dart';
 import '../generated/base_models.pb.dart';
+
 import '../generated/google/protobuf/empty.pb.dart';
 import '../generated/google/protobuf/timestamp.pb.dart';
 import '../generated/time_tracking_models.pb.dart';
