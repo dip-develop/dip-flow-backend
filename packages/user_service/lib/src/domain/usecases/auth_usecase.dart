@@ -24,7 +24,7 @@ class AuthUseCaseImpl implements AuthUseCase {
   @override
   Future<SessionModel> refreshToken(String token) {
     final jwt = _parseToken(token, _secretRefreshJWT);
-    final sessionID = int.tryParse(jwt?.jwtId ?? '');
+    final sessionID = jwt?.jwtId;
     if (sessionID == null) {
       throw AuthException.wrongAuthData();
     }
@@ -152,11 +152,11 @@ class AuthUseCaseImpl implements AuthUseCase {
   }
 
   @override
-  int? getUserId(String token) {
+  String? getUserId(String token) {
     final jwt = _parseToken(token, _secretAccessJWT);
     final payload = jwt?.payload;
     if (payload != null && payload is Map && payload.containsKey('user')) {
-      return int.tryParse(payload['user'] ?? '');
+      return payload['user'];
     } else {
       return null;
     }
@@ -165,18 +165,18 @@ class AuthUseCaseImpl implements AuthUseCase {
   String _generateToken(
       {required DateTime dateCreated,
       required DateTime dateExpired,
-      required int jwtId,
-      required int userId,
+      required String jwtId,
+      required String userId,
       required String secret}) {
     final jwt = JWT(
       {
         'iat': dateCreated.millisecondsSinceEpoch ~/ 1000,
         'exp': dateExpired.millisecondsSinceEpoch ~/ 1000,
         'nbf': dateCreated.millisecondsSinceEpoch ~/ 1000,
-        'user': userId.toString(),
+        'user': userId,
       },
       issuer: _issuer,
-      jwtId: jwtId.toString(),
+      jwtId: jwtId,
     );
 
     return jwt.sign(SecretKey(secret), noIssueAt: false);

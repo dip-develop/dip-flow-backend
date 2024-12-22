@@ -5,9 +5,9 @@ part 'auth_model.g.dart';
 abstract class EmailAuthModel
     implements AuthModel, Built<EmailAuthModel, EmailAuthModelBuilder> {
   @override
-  int? get id;
+  String? get id;
   @override
-  int get userId;
+  String get userId;
   String get email;
   String get password;
   bool get isVerified;
@@ -23,7 +23,7 @@ abstract class EmailAuthModel
 }
 
 abstract class AuthModel {
-  int? get id;
-  int get userId;
+  String? get id;
+  String get userId;
   DateTime get dateCreated;
 }

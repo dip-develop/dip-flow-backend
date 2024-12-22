@@ -30,19 +30,19 @@ message TasksReply {
 }
 
 message TaskReply {
-  uint32 id = 1;
-  uint32 userId = 2;
-  optional uint32 asignUserId = 3;
-  optional uint32 projectId = 4;
+  string id = 1;
+  string userId = 2;
+  optional string asignUserId = 3;
+  optional string projectId = 4;
   string title = 5;
   optional string description = 6;
-  uint32 statusId = 7;
+  string statusId = 7;
   optional google.protobuf.Timestamp finishTo = 8;
   google.protobuf.Timestamp created = 9;
   google.protobuf.Timestamp updated = 10;
 }
 
 message TaskStatusReply {
-  uint32 id = 1;
+  string id = 1;
   string title = 2;
 }

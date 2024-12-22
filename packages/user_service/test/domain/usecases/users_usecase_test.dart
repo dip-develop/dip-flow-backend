@@ -20,8 +20,9 @@ void main() {
       final dateExpired = dateCreated.add(Duration(days: 1));
 
       final session = SessionModel((p0) => p0
-        ..id = 1
-        ..userId = 2
+        ..id = '1'
+        ..userId = '2'
+        ..deviceId = '3'
         ..dateCreated = dateCreated
         ..dateExpired = dateExpired);
 

@@ -6,6 +6,8 @@
 
 ### Pre start
 
+Install [Protocol Buffers](https://github.com/protocolbuffers/protobuf/releases) depends of your OS
+
 ```bash
 dart pub global activate mono_repo
 dart pub global activate melos
@@ -33,21 +35,21 @@ Windows
   "configurations": [
     {
       "name": "user_service",
-      "cwd": "user_service",
+      "cwd": "packages/user_service",
       "request": "launch",
       "type": "dart",
       "program": "bin/server.dart"
     },
     {
       "name": "gateway_service",
-      "cwd": "gateway_service",
+      "cwd": "packages/gateway_service",
       "request": "launch",
       "type": "dart",
       "program": "bin/server.dart"
     },
     {
       "name": "activity_service",
-      "cwd": "activity_service",
+      "cwd": "packages/activity_service",
       "request": "launch",
       "type": "dart",
       "program": "bin/server.dart"

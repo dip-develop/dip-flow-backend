@@ -18,5 +18,5 @@ abstract class AuthUseCase {
   bool checkAccessToken(String token);
   String generateRefreshToken(SessionModel session);
   String generateAccessToken(SessionModel session, {Duration duration});
-  int? getUserId(String token);
+  String? getUserId(String token);
 }

@@ -19,7 +19,7 @@ message DateRangeRequest {
 }
 
 message FilterRequest {
-  uint32 userId = 1;
+  string userId = 1;
   optional PaginationRequest pagination = 2;
   optional SearchRequest search = 3;
   optional DateRangeRequest dateRange = 4;

@@ -5,7 +5,7 @@ part 'profile_model.g.dart';
 
 abstract class ProfileModel
     implements Built<ProfileModel, ProfileModelBuilder> {
-  int? get id;
+  String? get id;
   String? get name;
   double? get price;
   BuiltList<int> get workDays;
