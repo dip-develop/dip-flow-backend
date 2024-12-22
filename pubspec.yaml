@@ -1,7 +1,11 @@
-name: collabster_workspace
-
+name: _
+publish_to: none
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ^3.6.0
+workspace:
+  - packages/activity_service
+  - packages/gateway_service
+  - packages/user_service
 
 dev_dependencies:
   melos: ^3.3.0

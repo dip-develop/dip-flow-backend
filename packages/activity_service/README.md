@@ -6,8 +6,16 @@
 
 ## Quick start
 
+Linux and Mac
+
 ```bash
 sh ./generate.sh
+```
+
+Windows
+
+```cmd
+./generate.bat
 ```
 
 ## Or manual getting Started

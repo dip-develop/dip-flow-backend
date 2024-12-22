@@ -1,9 +1,9 @@
 FROM dart:stable AS protobuf
 ARG TARGETARCH
 RUN if [ "$TARGETARCH" = "amd64" ]; then  \
-    curl -L -o protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v25.1/protoc-25.1-linux-x86_64.zip" ;  \
+    curl -L -o protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v29.2/protoc-29.2-linux-x86_64.zip" ;  \
     else \
-    curl -L -o protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v25.1/protoc-25.1-linux-aarch_64.zip" ;  \
+    curl -L -o protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v29.2/protoc-29.2-linux-aarch_64.zip" ;  \
     fi
 RUN unzip protoc.zip -d /protoc
 
