@@ -1,2 +1,5 @@
 .vscode/
+.idea/
+.dart_tool/
 .env
+*.lock

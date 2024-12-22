@@ -4,6 +4,26 @@
 
 ## A Collabster Backend with Micro Service Arhitecture
 
+### Pre start
+
+```bash
+dart pub global activate mono_repo
+dart pub global activate melos
+```
+
+## Quick start
+
+Linux and Mac
+```bash
+sh ./generate.sh
+```
+Windows
+```cmd
+./generate.bat
+```
+
+## Or manual getting Started
+
 ### Get last datas
 
 ```bash
@@ -14,29 +34,29 @@ git submodule update --init --recursive --remote
 
 ```json
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "user_service",
-            "cwd": "user_service",
-            "request": "launch",
-            "type": "dart",
-            "program": "bin/server.dart"
-        },
-        {
-            "name": "gateway_service",
-            "cwd": "gateway_service",
-            "request": "launch",
-            "type": "dart",
-            "program": "bin/server.dart"
-        },
-        {
-            "name": "activity_service",
-            "cwd": "activity_service",
-            "request": "launch",
-            "type": "dart",
-            "program": "bin/server.dart"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "user_service",
+      "cwd": "user_service",
+      "request": "launch",
+      "type": "dart",
+      "program": "bin/server.dart"
+    },
+    {
+      "name": "gateway_service",
+      "cwd": "gateway_service",
+      "request": "launch",
+      "type": "dart",
+      "program": "bin/server.dart"
+    },
+    {
+      "name": "activity_service",
+      "cwd": "activity_service",
+      "request": "launch",
+      "type": "dart",
+      "program": "bin/server.dart"
+    }
+  ]
 }
 ```

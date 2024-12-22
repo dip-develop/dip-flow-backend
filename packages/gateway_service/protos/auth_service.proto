@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "auth_models.proto";
+
+package auth;
+
+service AuthService {
+  rpc SignInByEmail(auth.models.SignInEmailRequest)
+      returns (auth.models.AuthReply) {}
+  rpc SignUpByEmail(auth.models.SignUpEmailRequest)
+      returns (auth.models.AuthReply) {}
+  rpc RefreshToken(auth.models.RefreshTokenRequest)
+      returns (auth.models.AuthReply) {}
+  rpc RestorePassword(auth.models.RestorePasswordRequest)
+      returns (google.protobuf.Empty) {}
+  rpc VerifyEmail(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+}

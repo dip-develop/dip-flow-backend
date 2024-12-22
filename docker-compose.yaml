@@ -14,7 +14,7 @@ services:
       - ACTIVITY_SERVICE_IP=service_activity
       - ACTIVITY_SERVICE_PORT=$ACTIVITY_SERVICE_PORT
     build:
-      dockerfile: ./gateway_service/Dockerfile
+      dockerfile: ./packages/gateway_service/Dockerfile
       context: '.'
     restart: always
     networks:
@@ -32,7 +32,7 @@ services:
       - SMTP_PORT_EMAIL=$SMTP_PORT_EMAIL
       - DB_DIRECTORY=/app/db
     build:
-      dockerfile: ./user_service/Dockerfile
+      dockerfile: ./packages/user_service/Dockerfile
       context: '.'
     volumes:
       - user_db_data:/app/db
@@ -48,7 +48,7 @@ services:
       - PORT=$ACTIVITY_SERVICE_PORT
       - DB_DIRECTORY=/app/db
     build:
-      dockerfile: ./activity_service/Dockerfile
+      dockerfile: ./packages/activity_service/Dockerfile
       context: '.'
     volumes:
       - service_activity_db_data:/app/db

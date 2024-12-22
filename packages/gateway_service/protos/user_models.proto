@@ -1,0 +1,23 @@
+
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package user.models;
+
+message UserRequest {
+  optional string name = 1;
+  optional bytes image = 2;
+  repeated uint32 workDays = 3;
+  optional float price = 4;
+  optional string password = 5;
+}
+
+message UserReply {
+  uint32 id = 1;
+  optional string name = 2;
+  optional bytes image = 3;
+  repeated uint32 workDays = 4;
+  optional float price = 5;
+  google.protobuf.Timestamp dateCreated = 6;
+}
