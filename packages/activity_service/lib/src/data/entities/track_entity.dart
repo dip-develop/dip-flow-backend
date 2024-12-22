@@ -1,29 +1,29 @@
-import 'package:isar/isar.dart';
+// ignore_for_file: must_be_immutable
+
+import 'package:equatable/equatable.dart';
+import 'package:hive_ce/hive.dart';
 
 import '../../domain/models/models.dart';
 
 part 'track_entity.g.dart';
 
-@collection
-class TrackEntity {
-  @Id()
-  int id;
-  /* final trackTime = ToOne<TimeTrackingEntity>(); */
-  @Index()
+@HiveType(typeId: 1)
+class TrackEntity with HiveObjectMixin, EquatableMixin {
+  @HiveField(0)
   final DateTime start;
-  @Index()
+  @HiveField(1)
   final DateTime? end;
 
-  TrackEntity({this.id = 0, required this.start, this.end});
+  TrackEntity({required this.start, this.end});
 
   TrackModel toModel() => TrackModel((p0) => p0
-    ..id = id
+    ..id = key
     ..start = start
     ..end = end);
 
-  factory TrackEntity.fromModel(TrackModel model) => TrackEntity(
-        id: model.id ?? 0,
-        start: model.start,
-        end: model.end,
-      );
+  factory TrackEntity.fromModel(TrackModel model) =>
+      TrackEntity(start: model.start, end: model.end);
+
+  @override
+  List<Object?> get props => [key, start, end];
 }

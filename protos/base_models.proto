@@ -4,7 +4,7 @@ import "google/protobuf/timestamp.proto";
 
 package base.models;
 
-message IdRequest { uint32 id = 1; }
+message IdRequest { string id = 1; }
 
 message PaginationRequest {
   optional uint32 limit = 1;

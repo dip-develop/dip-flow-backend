@@ -20,7 +20,7 @@ message UpdateTimeTrackRequest {
 
 message DeleteTrackRequest {
   string id = 1;
-  uint32 trackId = 2;
+  string trackId = 2;
 }
 
 message TimeTracksReply {

@@ -147,11 +147,10 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
   bool get isInneted => _isInneted;
 
   void _closeUnusedBoxs() {
-    final boxes = _boxOpenedTime.entries
-        .where((element) => element.value.isAfter(DateTime.now().toUtc()));
-
-    for (var boxName in boxes.map((e) => e.key)) {
-      _lock.synchronized(() {
+    _lock.synchronized(() {
+      final boxes = _boxOpenedTime.entries
+          .where((element) => element.value.isAfter(DateTime.now().toUtc()));
+      for (var boxName in boxes.map((e) => e.key)) {
         if (Hive.isBoxOpen(boxName)) {
           final box = switch (boxName) {
             'open_auth_box' => Hive.box<OpenAuthEntity>(boxName),
@@ -164,8 +163,8 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
               _boxOpenedTime.removeWhere((key, value) => key == boxName));
         }
         _boxOpenedTime.removeWhere((key, value) => key == boxName);
-      });
-    }
+      }
+    });
   }
 
   Future<Box<T>> _getBox<T>() {

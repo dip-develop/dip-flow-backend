@@ -1,24 +1,19 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:injectable/injectable.dart';
 
 import '../exceptions/exceptions.dart';
 import '../interfaces/interfaces.dart';
 import '../models/models.dart';
 import '../repositories/repositories.dart';
 
+@Singleton(as: TimeTrackingsUseCase)
 class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
   final DataBaseRepository _dataBaseRepository;
 
-  TimeTrackingsUseCaseImpl._(this._dataBaseRepository);
-
-  static Future<TimeTrackingsUseCaseImpl> getInstance(
-      DataBaseRepository dataBaseRepository) {
-    return dataBaseRepository
-        .init()
-        .then((_) => TimeTrackingsUseCaseImpl._(dataBaseRepository));
-  }
+  TimeTrackingsUseCaseImpl(this._dataBaseRepository);
 
   @override
-  Future<TimeTrackingModel> getTimeTracking(int id) =>
+  Future<TimeTrackingModel> getTimeTracking(String id) =>
       _dataBaseRepository.getTimeTrack(id).then((value) {
         if (value == null) {
           throw DbException.notFound();
@@ -28,7 +23,7 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
 
   @override
   Future<PaginationModel<TimeTrackingModel>> getTimeTrackings({
-    required int userId,
+    required String userId,
     int? offset,
     int? limit,
     DateTime? start,
@@ -37,7 +32,7 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
   }) =>
       _dataBaseRepository
           .getTimeTracksByUserId(
-            id: userId,
+            userId: userId,
             offset: offset,
             limit: limit,
             start: start,
@@ -72,8 +67,8 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
 
   @override
   Future<TimeTrackingModel> addTimeTracking({
-    required int userId,
-    int? taskId,
+    required String userId,
+    String? taskId,
     String? title,
     String? description,
   }) =>
@@ -88,8 +83,8 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
 
   @override
   Future<TimeTrackingModel> updateTimeTracking({
-    required int id,
-    int? taskId,
+    required String id,
+    String? taskId,
     String? title,
     String? description,
     List<TrackModel>? tracks,
@@ -115,11 +110,11 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
       });
 
   @override
-  Future<void> deleteTimeTracking(int id) =>
+  Future<void> deleteTimeTracking(String id) =>
       _dataBaseRepository.deleteTimeTrack(id);
 
   @override
-  Future<TimeTrackingModel> startTrack(int id) =>
+  Future<TimeTrackingModel> startTrack(String id) =>
       stopTrack(id).then((value) => getTimeTracking(id).then((value) {
             final track =
                 TrackModel((p0) => p0..start = DateTime.now().toUtc());
@@ -129,7 +124,7 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
           }));
 
   @override
-  Future<TimeTrackingModel> stopTrack(int id) =>
+  Future<TimeTrackingModel> stopTrack(String id) =>
       getTimeTracking(id).then((value) {
         final tracks = List<TrackModel>.from(value.tracks, growable: true);
         TrackModel? stopedTrack;
@@ -149,7 +144,7 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
 
   @override
   Future<TimeTrackingModel> deleteTrack(
-          {required int id, required int trackId}) =>
+          {required String id, required String trackId}) =>
       getTimeTracking(id).then((value) {
         final tracks = List<TrackModel>.from(value.tracks, growable: true);
         tracks.removeWhere((element) => element.id == trackId);

@@ -6,7 +6,7 @@ description: |
   You can access our service from any device and any operating system, and enjoy our beautiful graphs that visualize your progress and performance.
   Plus, if you are an individual user or a small team, you can use our service for free forever. No hidden fees, no strings attached.
   Join Collabster today and take your team to the next level.
-version: 1.0.1
+version: 1.0.0
 publish_to: none
 resolution: workspace
 
@@ -20,6 +20,9 @@ dependencies:
   built_value: ^8.9.3
   built_collection: ^5.1.1
   hive_ce: ^2.8.0+2
+  equatable: ^2.0.7
+  collection: ^1.19.1
+  synchronized: ^3.3.0+3
 
 dev_dependencies:
   lints: ^5.1.1

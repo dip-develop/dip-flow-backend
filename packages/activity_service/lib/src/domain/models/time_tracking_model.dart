@@ -8,9 +8,9 @@ part 'time_tracking_model.g.dart';
 
 abstract class TimeTrackingModel
     implements Built<TimeTrackingModel, TimeTrackingModelBuilder> {
-  int? get id;
-  int get userId;
-  int? get taskId;
+  String? get id;
+  String get userId;
+  String? get taskId;
   String? get title;
   String? get description;
   BuiltList<TrackModel> get tracks;
@@ -29,7 +29,7 @@ abstract class TimeTrackingModel
 }
 
 abstract class TrackModel implements Built<TrackModel, TrackModelBuilder> {
-  int? get id;
+  String? get id;
   DateTime get start;
   DateTime? get end;
 

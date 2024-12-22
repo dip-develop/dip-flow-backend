@@ -1,11 +1,11 @@
 import '../models/models.dart';
 
 abstract class DataBaseRepository {
-  Future<void> init();
+  void init();
   bool get isInneted;
-  Future<TimeTrackingModel?> getTimeTrack(int id);
+  Future<TimeTrackingModel?> getTimeTrack(String id);
   Future<PaginationModel<TimeTrackingModel>> getTimeTracksByUserId({
-    required int id,
+    required String userId,
     int? offset,
     int? limit,
     DateTime? start,
@@ -13,9 +13,9 @@ abstract class DataBaseRepository {
     String? search,
   });
   Future<TimeTrackingModel> putTimeTrack(TimeTrackingModel timeTrack);
-  Future<void> deleteTimeTrack(int id);
+  Future<void> deleteTimeTrack(String id);
   Future<void> putTrack(TrackModel track);
-  Future<void> deleteTrack(int id);
+  Future<void> deleteTrack(String id);
 
-  void dispose();
+  Future<void> dispose();
 }
