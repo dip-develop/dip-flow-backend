@@ -5,7 +5,7 @@ dart pub get
 dart pub upgrade
 
 mkdir -p lib/src/generated
-protoc --proto_path=../../protos/ --dart_out=grpc:lib/src/generated -Iprotos \
+protoc --proto_path=protos/ --dart_out=grpc:lib/src/generated -Iprotos \
     base_models.proto \
     auth_service.proto \
     auth_models.proto \

@@ -5,7 +5,7 @@ dart pub upgrade
 dart pub global activate protoc_plugin
 
 mkdir -p lib/src/generated
-protoc --proto_path=../../protos/ --dart_out=grpc:lib/src/generated -Iprotos \
+protoc --proto_path=protos/ --dart_out=grpc:lib/src/generated -Iprotos \
     base_models.proto \
     gate_models.proto \
     gate_service.proto \

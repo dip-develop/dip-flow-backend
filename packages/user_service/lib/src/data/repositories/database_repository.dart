@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:hive_ce/hive.dart';
 import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../domain/exceptions/exceptions.dart';
 import '../../domain/models/auth_model.dart';
@@ -15,6 +17,7 @@ import '../entities/entities.dart';
 
 @Singleton(as: DataBaseRepository)
 class DataBaseRepositoryImpl implements DataBaseRepository {
+  final _log = Logger('DataBaseRepositoryImpl');
   bool _isInneted = false;
   Timer? _timer;
   final _boxOpenedTime = Map<String, DateTime>.identity();
@@ -27,6 +30,9 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
     final dbUnUsedClosePeriod =
         int.tryParse(Platform.environment['DB_UNUSED_CLOSE_PERIOD'] ?? '') ??
             10;
+
+    _log.config('DB_DIRECTORY is $directory');
+    _log.config('DB_UNUSED_CLOSE_PERIOD is $dbUnUsedClosePeriod');
     if (!_isInneted) {
       Hive.init(directory);
     }
@@ -65,7 +71,7 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
 
   @override
   Future<ProfileModel> putProfile(ProfileModel profile) {
-    final id = profile.id ?? '';
+    final id = profile.id ?? Uuid().v1();
     return _getBox<ProfileEntity>()
         .then((box) => box.put(id, ProfileEntity.fromModel(profile)))
         .then((_) => profile.rebuild((p0) => p0..id = id));
@@ -95,7 +101,7 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
 
   @override
   Future<SessionModel> putSession(SessionModel session) {
-    final id = session.id ?? '';
+    final id = session.id ?? Uuid().v1();
     return _getBox<SessionEntity>()
         .then((box) => box.put(id, SessionEntity.fromModel(session)))
         .then((_) => session.rebuild((p0) => p0..id = id));
@@ -128,7 +134,7 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
 
   @override
   Future<EmailAuthModel> putEmailAuth(EmailAuthModel auth) {
-    final id = auth.id ?? '';
+    final id = auth.id ?? Uuid().v1();
     return _getBox<EmailAuthEntity>()
         .then((box) => box.put(id, EmailAuthEntity.fromModel(auth)))
         .then((_) => auth.rebuild((p0) => p0..id = id));
@@ -159,22 +165,24 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
             'session_box' => Hive.box<SessionEntity>(boxName),
             _ => throw DbException.internalError()
           };
-          return box.close().then((_) =>
-              _boxOpenedTime.removeWhere((key, value) => key == boxName));
+          return box.close().then((_) {
+            _log.fine('Close Unused $boxName Box');
+            _boxOpenedTime.removeWhere((key, value) => key == boxName);
+          });
         }
         _boxOpenedTime.removeWhere((key, value) => key == boxName);
       }
     });
   }
 
-  Future<Box<T>> _getBox<T>() {
+  Future<Box<T>> _getBox<T extends HiveObjectMixin>() {
     if (!isInneted) throw DbException.notInneted();
     return _lock.synchronized<Box<T>>(() {
-      final boxName = switch (T) {
-        OpenAuthEntity _ => 'open_auth_box',
-        EmailAuthEntity _ => 'email_auth_box',
-        ProfileEntity _ => 'profile_box',
-        SessionEntity _ => 'session_box',
+      final boxName = switch (T.toString()) {
+        'OpenAuthEntity' => 'open_auth_box',
+        'EmailAuthEntity' => 'email_auth_box',
+        'ProfileEntity' => 'profile_box',
+        'SessionEntity' => 'session_box',
         _ => throw DbException.internalError()
       };
 
@@ -182,7 +190,9 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
       if (Hive.isBoxOpen(boxName)) {
         return Future.value(Hive.box<T>(boxName));
       } else {
-        return Hive.openBox<T>(boxName);
+        return Hive.openBox<T>(boxName).whenComplete(() {
+          _log.fine('Open $boxName Box');
+        });
       }
     });
   }

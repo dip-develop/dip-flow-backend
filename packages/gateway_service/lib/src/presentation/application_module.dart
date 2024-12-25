@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:grpc/grpc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
 import '../generated/auth_service.pbgrpc.dart';
 import '../generated/time_tracking_service.pbgrpc.dart';
@@ -9,12 +10,14 @@ import '../generated/user_service.pbgrpc.dart';
 
 @module
 abstract class ApplicationModule {
+  final _log = Logger('ApplicationModule');
+
   @lazySingleton
   AuthServiceClient authServiceClient() {
     final authIP = Platform.environment['USER_SERVICE_IP'] ?? '127.0.0.1';
     final authPort =
         int.tryParse(Platform.environment['USER_SERVICE_PORT'] ?? '') ?? 8081;
-    print('Starting the auth client at $authIP:$authPort');
+    _log.info('Starting the auth client at $authIP:$authPort');
     final authChannel = ClientChannel(
       authIP,
       port: authPort,
@@ -30,7 +33,7 @@ abstract class ApplicationModule {
     final authIP = Platform.environment['USER_SERVICE_IP'] ?? '127.0.0.1';
     final authPort =
         int.tryParse(Platform.environment['USER_SERVICE_PORT'] ?? '') ?? 8081;
-    print('Starting the auth client at $authIP:$authPort');
+    _log.info('Starting the user client at $authIP:$authPort');
     final authChannel = ClientChannel(
       authIP,
       port: authPort,
@@ -48,7 +51,7 @@ abstract class ApplicationModule {
     final timeTrackingPort =
         int.tryParse(Platform.environment['ACTIVITY_SERVICE_PORT'] ?? '') ??
             8082;
-    print(
+    _log.info(
         'Starting the time tracking client at $timeTrackingIP:$timeTrackingPort');
     final authChannel = ClientChannel(
       timeTrackingIP,

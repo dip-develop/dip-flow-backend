@@ -20,23 +20,25 @@ class TimeTrackingEntity with HiveObjectMixin, EquatableMixin {
   @HiveField(3)
   final String? description;
   @HiveField(4)
-  final HiveList<TrackEntity> tracks;
+  final Set<String> trackIds;
 
   TimeTrackingEntity({
     required this.userId,
     this.taskId,
     this.title,
     this.description,
-    required this.tracks,
+    required this.trackIds,
   });
 
-  TimeTrackingModel toModel() => TimeTrackingModel((p0) => p0
-    ..id = key
-    ..userId = userId
-    ..taskId = taskId
-    ..title = title
-    ..description = description
-    ..tracks = ListBuilder(tracks.map((element) => element.toModel())));
+  TimeTrackingModel toModel(
+          [List<TrackEntity> tracks = const <TrackEntity>[]]) =>
+      TimeTrackingModel((p0) => p0
+        ..id = key.toString()
+        ..userId = userId
+        ..taskId = taskId
+        ..title = title
+        ..description = description
+        ..tracks = ListBuilder(tracks.map((element) => element.toModel())));
 
   factory TimeTrackingEntity.fromModel(TimeTrackingModel model) {
     final timeTrack = TimeTrackingEntity(
@@ -44,12 +46,15 @@ class TimeTrackingEntity with HiveObjectMixin, EquatableMixin {
         taskId: model.taskId,
         title: model.title,
         description: model.description,
-        tracks: HiveList(Hive.box<TrackEntity>('track_box'),
-            objects:
-                model.tracks.map((p0) => TrackEntity.fromModel(p0)).toList()));
+        trackIds: model.tracks
+            .map((p0) => p0.id)
+            .where((element) => element != null)
+            .cast<String>()
+            .toSet());
     return timeTrack;
   }
 
   @override
-  List<Object?> get props => [key, userId, taskId, title, description];
+  List<Object?> get props =>
+      [key, userId, taskId, title, description, trackIds];
 }

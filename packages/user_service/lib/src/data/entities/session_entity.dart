@@ -26,7 +26,7 @@ class SessionEntity with HiveObjectMixin, EquatableMixin {
   });
 
   SessionModel toModel() => SessionModel((p0) => p0
-    ..id = key
+    ..id = key.toString()
     ..userId = userId
     ..deviceId = deviceId
     ..dateCreated = dateCreated

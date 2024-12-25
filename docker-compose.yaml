@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3"
 
 services:
   service_gateway:
@@ -48,6 +48,7 @@ services:
     environment:
       - PORT=$ACTIVITY_SERVICE_PORT
       - DB_DIRECTORY=/app/db
+      - DB_UNUSED_CLOSE_PERIOD=10
     build:
       dockerfile: ./packages/activity_service/Dockerfile
       context: "."

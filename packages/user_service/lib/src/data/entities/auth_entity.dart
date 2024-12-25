@@ -33,7 +33,7 @@ class EmailAuthEntity
   });
 
   EmailAuthModel toModel() => EmailAuthModel((p0) => p0
-    ..id = key
+    ..id = key.toString()
     ..userId = userId
     ..email = email
     ..password = password

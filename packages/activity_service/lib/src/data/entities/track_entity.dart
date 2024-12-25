@@ -17,7 +17,7 @@ class TrackEntity with HiveObjectMixin, EquatableMixin {
   TrackEntity({required this.start, this.end});
 
   TrackModel toModel() => TrackModel((p0) => p0
-    ..id = key
+    ..id = key.toString()
     ..start = start
     ..end = end);
 

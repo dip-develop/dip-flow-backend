@@ -27,7 +27,7 @@ class ProfileEntity with HiveObjectMixin, EquatableMixin {
   });
 
   ProfileModel toModel() => ProfileModel((p0) => p0
-    ..id = key
+    ..id = key.toString()
     ..name = name
     ..price = price
     ..workDays = ListBuilder(workDays)

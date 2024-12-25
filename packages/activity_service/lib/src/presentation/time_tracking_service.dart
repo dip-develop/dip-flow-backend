@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:grpc/grpc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
 import '../domain/exceptions/exceptions.dart';
 import '../domain/interfaces/interfaces.dart';
@@ -14,14 +15,16 @@ import '../generated/time_tracking_service.pbgrpc.dart';
 
 @singleton
 class TimeTrackingService extends TimeTrackingServiceBase {
+  final _log = Logger('TimeTrackingService');
   final TimeTrackingsUseCase _timeTrackings;
 
   TimeTrackingService(this._timeTrackings);
 
   @override
   Future<TimeTrackReply> getTimeTrack(ServiceCall call, IdRequest request) {
+    _log.finer('Call "getTimeTrack"');
+    _log.finest(request.toDebugString());
     final completer = Completer<TimeTrackReply>();
-
     _timeTrackings
         .getTimeTracking(
           request.id,
@@ -52,6 +55,8 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   @override
   Future<TimeTracksReply> getTimeTracks(
       ServiceCall call, FilterRequest request) {
+    _log.finer('Call "getTimeTracks"');
+    _log.finest(request.toDebugString());
     final completer = Completer<TimeTracksReply>();
     _timeTrackings
         .getTimeTrackings(
@@ -101,6 +106,8 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   @override
   Future<TimeTrackReply> addTimeTrack(
       ServiceCall call, AddTimeTrackRequest request) {
+    _log.finer('Call "addTimeTrack"');
+    _log.finest(request.toDebugString());
     final completer = Completer<TimeTrackReply>();
     _timeTrackings
         .addTimeTracking(
@@ -135,6 +142,8 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   @override
   Future<TimeTrackReply> updateTimeTrack(
       ServiceCall call, UpdateTimeTrackRequest request) {
+    _log.finer('Call "updateTimeTrack"');
+    _log.finest(request.toDebugString());
     final completer = Completer<TimeTrackReply>();
     _timeTrackings
         .updateTimeTracking(
@@ -159,17 +168,24 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   }
 
   @override
-  Future<Empty> deleteTimeTrack(ServiceCall call, IdRequest request) =>
-      _timeTrackings.deleteTimeTracking(request.id).then((_) => Empty());
+  Future<Empty> deleteTimeTrack(ServiceCall call, IdRequest request) {
+    _log.finer('Call "deleteTimeTrack"');
+    _log.finest(request.toDebugString());
+    return _timeTrackings.deleteTimeTracking(request.id).then((_) => Empty());
+  }
 
   @override
   Future<TracksReply> getTracks(ServiceCall call, FilterRequest request) {
+    _log.finer('Call "getTracks"');
+    _log.finest(request.toDebugString());
     // TODO: implement getTracks
     throw UnimplementedError();
   }
 
   @override
   Future<TimeTrackReply> startTrack(ServiceCall call, IdRequest request) {
+    _log.finer('Call "startTrack"');
+    _log.finest(request.toDebugString());
     final completer = Completer<TimeTrackReply>();
     _timeTrackings
         .startTrack(
@@ -191,6 +207,8 @@ class TimeTrackingService extends TimeTrackingServiceBase {
 
   @override
   Future<TimeTrackReply> stopTrack(ServiceCall call, IdRequest request) {
+    _log.finer('Call "stopTrack"');
+    _log.finest(request.toDebugString());
     final completer = Completer<TimeTrackReply>();
     _timeTrackings
         .stopTrack(
@@ -213,6 +231,8 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   @override
   Future<TimeTrackReply> deleteTrack(
       ServiceCall call, DeleteTrackRequest request) {
+    _log.finer('Call "deleteTrack"');
+    _log.finest(request.toDebugString());
     final completer = Completer<TimeTrackReply>();
     _timeTrackings
         .deleteTrack(id: request.id, trackId: request.trackId)

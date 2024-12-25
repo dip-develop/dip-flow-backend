@@ -4,3 +4,5 @@
 .env
 **.lock
 **.g.yaml
+packages/**/db/
+packages/**/protos/
