@@ -8,7 +8,7 @@ description: |
   Join Collabster today and take your team to the next level.
 version: 1.0.0
 publish_to: none
-resolution: workspace
+#resolution: workspace
 
 environment:
   sdk: ^3.6.0

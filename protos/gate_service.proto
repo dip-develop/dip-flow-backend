@@ -43,23 +43,23 @@ service ProfileGateService {
 }
 
 service TimeTrackingGateService {
-  rpc GetTimeTrack(base.models.IdRequest)
-      returns (time_tracking.models.TimeTrackReply) {
+  rpc GetTimeTracking(base.models.IdRequest)
+      returns (time_tracking.models.TimeTrackingReply) {
   }
 
-  rpc GetTimeTracks(gate.models.FilterRequest)
-      returns (time_tracking.models.TimeTracksReply) {
+  rpc GetTimeTrackings(gate.models.FilterRequest)
+      returns (time_tracking.models.TimeTrackingsReply) {
   }
 
-  rpc AddTimeTrack(gate.models.AddTimeTrackRequest)
-      returns (time_tracking.models.TimeTrackReply) {
+  rpc AddTimeTracking(gate.models.AddTimeTrackingRequest)
+      returns (time_tracking.models.TimeTrackingReply) {
   }
 
-  rpc UpdateTimeTrack(time_tracking.models.UpdateTimeTrackRequest)
-      returns (time_tracking.models.TimeTrackReply) {
+  rpc UpdateTimeTracking(time_tracking.models.UpdateTimeTrackingRequest)
+      returns (time_tracking.models.TimeTrackingReply) {
   }
 
-  rpc DeleteTimeTrack(base.models.IdRequest) returns (google.protobuf.Empty) {
+  rpc DeleteTimeTracking(base.models.IdRequest) returns (google.protobuf.Empty) {
   }
 
   // Track
@@ -69,14 +69,14 @@ service TimeTrackingGateService {
   }
 
   rpc StartTrack(base.models.IdRequest)
-      returns (time_tracking.models.TimeTrackReply) {
+      returns (time_tracking.models.TimeTrackingReply) {
   }
 
   rpc StopTrack(base.models.IdRequest)
-      returns (time_tracking.models.TimeTrackReply) {
+      returns (time_tracking.models.TimeTrackingReply) {
   }
 
-  rpc DeleteTrack(time_tracking.models.DeleteTrackRequest)
-      returns (time_tracking.models.TimeTrackReply) {
+  rpc DeleteTrack(base.models.IdRequest)
+      returns (google.protobuf.Empty) {
   }
 }

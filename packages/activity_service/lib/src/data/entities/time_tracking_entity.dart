@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:hive_ce/hive.dart';
 
 import '../../domain/models/models.dart';
-import 'entities.dart';
 
 part 'time_tracking_entity.g.dart';
 
@@ -30,15 +29,14 @@ class TimeTrackingEntity with HiveObjectMixin, EquatableMixin {
     required this.trackIds,
   });
 
-  TimeTrackingModel toModel(
-          [List<TrackEntity> tracks = const <TrackEntity>[]]) =>
+  TimeTrackingModel toModel([List<TrackModel> tracks = const <TrackModel>[]]) =>
       TimeTrackingModel((p0) => p0
         ..id = key.toString()
         ..userId = userId
         ..taskId = taskId
         ..title = title
         ..description = description
-        ..tracks = ListBuilder(tracks.map((element) => element.toModel())));
+        ..tracks = ListBuilder(tracks));
 
   factory TimeTrackingEntity.fromModel(TimeTrackingModel model) {
     final timeTrack = TimeTrackingEntity(

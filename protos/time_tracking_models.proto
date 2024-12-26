@@ -4,33 +4,28 @@ import "google/protobuf/timestamp.proto";
 
 package time_tracking.models;
 
-message AddTimeTrackRequest {
+message AddTimeTrackingRequest {
   string userId = 1;
   optional string taskId = 2;
   optional string title = 3;
   optional string description = 4;
 }
 
-message UpdateTimeTrackRequest {
+message UpdateTimeTrackingRequest {
   string id = 1;
   optional string taskId = 2;
   optional string title = 3;
   optional string description = 4;
 }
 
-message DeleteTrackRequest {
-  string id = 1;
-  string trackId = 2;
-}
-
-message TimeTracksReply {
+message TimeTrackingsReply {
   uint32 count = 1;
   uint32 limit = 2;
   uint32 offset = 3;
-  repeated TimeTrackReply timeTracks = 4;
+  repeated TimeTrackingReply timeTracks = 4;
 }
 
-message TimeTrackReply {
+message TimeTrackingReply {
   string id = 1;
   string userId = 2;
   optional string taskId = 3;

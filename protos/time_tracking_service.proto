@@ -8,29 +8,29 @@ package time_tracking;
 
 service TimeTrackingService {
 
-  rpc GetTimeTrack(base.models.IdRequest)
-      returns (time_tracking.models.TimeTrackReply) {}
+  rpc GetTimeTracking(base.models.IdRequest)
+      returns (time_tracking.models.TimeTrackingReply) {}
 
-  rpc GetTimeTracks(base.models.FilterRequest)
-      returns (time_tracking.models.TimeTracksReply) {}
+  rpc GetTimeTrackings(base.models.FilterRequest)
+      returns (time_tracking.models.TimeTrackingsReply) {}
 
-  rpc AddTimeTrack(time_tracking.models.AddTimeTrackRequest)
-      returns (time_tracking.models.TimeTrackReply) {}
+  rpc AddTimeTracking(time_tracking.models.AddTimeTrackingRequest)
+      returns (time_tracking.models.TimeTrackingReply) {}
 
-  rpc UpdateTimeTrack(time_tracking.models.UpdateTimeTrackRequest)
-      returns (time_tracking.models.TimeTrackReply) {}
+  rpc UpdateTimeTracking(time_tracking.models.UpdateTimeTrackingRequest)
+      returns (time_tracking.models.TimeTrackingReply) {}
 
-  rpc DeleteTimeTrack(base.models.IdRequest) returns (google.protobuf.Empty) {}
+  rpc DeleteTimeTracking(base.models.IdRequest) returns (google.protobuf.Empty) {}
 
   rpc GetTracks(base.models.FilterRequest)
       returns (time_tracking.models.TracksReply) {}
 
   rpc StartTrack(base.models.IdRequest)
-      returns (time_tracking.models.TimeTrackReply) {}
+      returns (time_tracking.models.TimeTrackingReply) {}
 
   rpc StopTrack(base.models.IdRequest)
-      returns (time_tracking.models.TimeTrackReply) {}
+      returns (time_tracking.models.TimeTrackingReply) {}
 
-  rpc DeleteTrack(time_tracking.models.DeleteTrackRequest)
-      returns (time_tracking.models.TimeTrackReply) {}
+  rpc DeleteTrack(base.models.IdRequest)
+      returns (google.protobuf.Empty) {}
 }

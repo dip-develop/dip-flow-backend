@@ -19,13 +19,17 @@ abstract class TimeTrackingModel
   factory TimeTrackingModel([void Function(TimeTrackingModelBuilder) updates]) =
       _$TimeTrackingModel;
 
-  TimeTrackReply toReply() => TimeTrackReply(
+  TimeTrackingReply toReply() => TimeTrackingReply(
       id: id,
       userId: userId,
       taskId: taskId,
       title: title,
       description: description,
       tracks: tracks.map((p0) => p0.toReply()));
+
+  @BuiltValueHook(initializeBuilder: true)
+  static void _setDefaults(TimeTrackingModelBuilder b) =>
+      b..tracks = ListBuilder<TrackModel>();
 }
 
 abstract class TrackModel implements Built<TrackModel, TrackModelBuilder> {

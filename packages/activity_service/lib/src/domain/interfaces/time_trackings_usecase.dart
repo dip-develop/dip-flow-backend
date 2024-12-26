@@ -23,8 +23,7 @@ abstract class TimeTrackingsUseCase {
     String? search,
   });
   Future<void> deleteTimeTracking(String id);
-  Future<TimeTrackingModel> startTrack(String id);
-  Future<TimeTrackingModel> stopTrack(String id);
-  Future<TimeTrackingModel> deleteTrack(
-      {required String id, required String trackId});
+  Future<TimeTrackingModel> startTimeTracking(String id);
+  Future<TimeTrackingModel> stopTimeTracking(String id);
+  Future<void> deleteTrack(String id);
 }

@@ -17,37 +17,39 @@ class TimeTrackingService extends TimeTrackingGateServiceBase {
   TimeTrackingService(this._timeTrackingClient, this._userClient);
 
   @override
-  Future<TimeTrackReply> getTimeTrack(ServiceCall call, IdRequest request) =>
-      _timeTrackingClient.getTimeTrack(request,
+  Future<TimeTrackingReply> getTimeTracking(
+          ServiceCall call, IdRequest request) =>
+      _timeTrackingClient.getTimeTracking(request,
           options: CallOptions(metadata: call.clientMetadata));
 
   @override
-  Future<TimeTracksReply> getTimeTracks(
+  Future<TimeTrackingsReply> getTimeTrackings(
           ServiceCall call, gate.FilterRequest request) =>
       _userClient
           .getUser(Empty(), options: CallOptions(metadata: call.clientMetadata))
-          .then((user) => _timeTrackingClient.getTimeTracks(FilterRequest(
+          .then((user) => _timeTrackingClient.getTimeTrackings(FilterRequest(
               userId: user.id,
               pagination: request.pagination,
               dateRange: request.dateRange,
               search: request.search)));
 
   @override
-  Future<TimeTrackReply> addTimeTrack(
-          ServiceCall call, gate.AddTimeTrackRequest request) =>
+  Future<TimeTrackingReply> addTimeTracking(
+          ServiceCall call, gate.AddTimeTrackingRequest request) =>
       _userClient
           .getUser(Empty(), options: CallOptions(metadata: call.clientMetadata))
-          .then((user) => _timeTrackingClient.addTimeTrack(AddTimeTrackRequest(
-              userId: user.id,
-              taskId: request.taskId,
-              title: request.title,
-              description: request.description)));
+          .then((user) => _timeTrackingClient.addTimeTracking(
+              AddTimeTrackingRequest(
+                  userId: user.id,
+                  taskId: request.taskId,
+                  title: request.title,
+                  description: request.description)));
 
   @override
-  Future<TimeTrackReply> updateTimeTrack(
-          ServiceCall call, UpdateTimeTrackRequest request) =>
-      _timeTrackingClient.updateTimeTrack(
-          UpdateTimeTrackRequest(
+  Future<TimeTrackingReply> updateTimeTracking(
+          ServiceCall call, UpdateTimeTrackingRequest request) =>
+      _timeTrackingClient.updateTimeTracking(
+          UpdateTimeTrackingRequest(
             id: request.id,
             taskId: request.taskId,
             title: request.title,
@@ -56,8 +58,8 @@ class TimeTrackingService extends TimeTrackingGateServiceBase {
           options: CallOptions(metadata: call.clientMetadata));
 
   @override
-  Future<Empty> deleteTimeTrack(ServiceCall call, IdRequest request) =>
-      _timeTrackingClient.deleteTimeTrack(request,
+  Future<Empty> deleteTimeTracking(ServiceCall call, IdRequest request) =>
+      _timeTrackingClient.deleteTimeTracking(request,
           options: CallOptions(metadata: call.clientMetadata));
 
   @override
@@ -73,18 +75,17 @@ class TimeTrackingService extends TimeTrackingGateServiceBase {
               options: CallOptions(metadata: call.clientMetadata)));
 
   @override
-  Future<TimeTrackReply> startTrack(ServiceCall call, IdRequest request) =>
+  Future<TimeTrackingReply> startTrack(ServiceCall call, IdRequest request) =>
       _timeTrackingClient.startTrack(request,
           options: CallOptions(metadata: call.clientMetadata));
 
   @override
-  Future<TimeTrackReply> stopTrack(ServiceCall call, IdRequest request) =>
+  Future<TimeTrackingReply> stopTrack(ServiceCall call, IdRequest request) =>
       _timeTrackingClient.stopTrack(request,
           options: CallOptions(metadata: call.clientMetadata));
 
   @override
-  Future<TimeTrackReply> deleteTrack(
-          ServiceCall call, DeleteTrackRequest request) =>
+  Future<Empty> deleteTrack(ServiceCall call, IdRequest request) =>
       _timeTrackingClient.deleteTrack(request,
           options: CallOptions(metadata: call.clientMetadata));
 }

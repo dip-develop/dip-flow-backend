@@ -21,15 +21,16 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   TimeTrackingService(this._timeTrackings);
 
   @override
-  Future<TimeTrackReply> getTimeTrack(ServiceCall call, IdRequest request) {
+  Future<TimeTrackingReply> getTimeTracking(
+      ServiceCall call, IdRequest request) {
     _log.finer('Call "getTimeTrack"');
     _log.finest(request.toDebugString());
-    final completer = Completer<TimeTrackReply>();
+    final completer = Completer<TimeTrackingReply>();
     _timeTrackings
         .getTimeTracking(
           request.id,
         )
-        .then((timeTrack) => TimeTrackReply(
+        .then((timeTrack) => TimeTrackingReply(
             id: timeTrack.id,
             userId: timeTrack.userId,
             taskId: timeTrack.taskId,
@@ -53,11 +54,11 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   }
 
   @override
-  Future<TimeTracksReply> getTimeTracks(
+  Future<TimeTrackingsReply> getTimeTrackings(
       ServiceCall call, FilterRequest request) {
     _log.finer('Call "getTimeTracks"');
     _log.finest(request.toDebugString());
-    final completer = Completer<TimeTracksReply>();
+    final completer = Completer<TimeTrackingsReply>();
     _timeTrackings
         .getTimeTrackings(
             userId: request.userId,
@@ -73,11 +74,11 @@ class TimeTrackingService extends TimeTrackingServiceBase {
                 ? request.dateRange.end.toDateTime()
                 : null,
             search: request.search.hasSearch() ? request.search.search : null)
-        .then((timeTracks) => TimeTracksReply(
+        .then((timeTracks) => TimeTrackingsReply(
             count: timeTracks.count,
             limit: timeTracks.limit,
             offset: timeTracks.offset,
-            timeTracks: timeTracks.items.map((timeTrack) => TimeTrackReply(
+            timeTracks: timeTracks.items.map((timeTrack) => TimeTrackingReply(
                 id: timeTrack.id,
                 userId: timeTrack.userId,
                 taskId: timeTrack.taskId,
@@ -104,11 +105,11 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   }
 
   @override
-  Future<TimeTrackReply> addTimeTrack(
-      ServiceCall call, AddTimeTrackRequest request) {
+  Future<TimeTrackingReply> addTimeTracking(
+      ServiceCall call, AddTimeTrackingRequest request) {
     _log.finer('Call "addTimeTrack"');
     _log.finest(request.toDebugString());
-    final completer = Completer<TimeTrackReply>();
+    final completer = Completer<TimeTrackingReply>();
     _timeTrackings
         .addTimeTracking(
             userId: request.userId,
@@ -116,7 +117,7 @@ class TimeTrackingService extends TimeTrackingServiceBase {
             title: request.title,
             description: request.description)
         .then((timeTrack) {
-      completer.complete(TimeTrackReply(
+      completer.complete(TimeTrackingReply(
           id: timeTrack.id,
           userId: timeTrack.userId,
           taskId: timeTrack.taskId,
@@ -140,11 +141,11 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   }
 
   @override
-  Future<TimeTrackReply> updateTimeTrack(
-      ServiceCall call, UpdateTimeTrackRequest request) {
+  Future<TimeTrackingReply> updateTimeTracking(
+      ServiceCall call, UpdateTimeTrackingRequest request) {
     _log.finer('Call "updateTimeTrack"');
     _log.finest(request.toDebugString());
-    final completer = Completer<TimeTrackReply>();
+    final completer = Completer<TimeTrackingReply>();
     _timeTrackings
         .updateTimeTracking(
       id: request.id,
@@ -168,10 +169,23 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   }
 
   @override
-  Future<Empty> deleteTimeTrack(ServiceCall call, IdRequest request) {
+  Future<Empty> deleteTimeTracking(ServiceCall call, IdRequest request) {
     _log.finer('Call "deleteTimeTrack"');
     _log.finest(request.toDebugString());
-    return _timeTrackings.deleteTimeTracking(request.id).then((_) => Empty());
+    final completer = Completer<Empty>();
+    _timeTrackings
+        .deleteTimeTracking(request.id)
+        .then((_) => completer.complete(Empty()))
+        .catchError((onError) {
+      if (onError is DbException) {
+        call.sendTrailers(
+            status: StatusCode.notFound, message: onError.message);
+      } else {
+        call.sendTrailers(status: StatusCode.unknown);
+      }
+      completer.completeError(onError);
+    });
+    return completer.future;
   }
 
   @override
@@ -183,12 +197,12 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   }
 
   @override
-  Future<TimeTrackReply> startTrack(ServiceCall call, IdRequest request) {
+  Future<TimeTrackingReply> startTrack(ServiceCall call, IdRequest request) {
     _log.finer('Call "startTrack"');
     _log.finest(request.toDebugString());
-    final completer = Completer<TimeTrackReply>();
+    final completer = Completer<TimeTrackingReply>();
     _timeTrackings
-        .startTrack(
+        .startTimeTracking(
           request.id,
         )
         .then((timeTrack) => timeTrack.toReply())
@@ -206,12 +220,12 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   }
 
   @override
-  Future<TimeTrackReply> stopTrack(ServiceCall call, IdRequest request) {
+  Future<TimeTrackingReply> stopTrack(ServiceCall call, IdRequest request) {
     _log.finer('Call "stopTrack"');
     _log.finest(request.toDebugString());
-    final completer = Completer<TimeTrackReply>();
+    final completer = Completer<TimeTrackingReply>();
     _timeTrackings
-        .stopTrack(
+        .stopTimeTracking(
           request.id,
         )
         .then((timeTrack) => timeTrack.toReply())
@@ -229,15 +243,13 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   }
 
   @override
-  Future<TimeTrackReply> deleteTrack(
-      ServiceCall call, DeleteTrackRequest request) {
+  Future<Empty> deleteTrack(ServiceCall call, IdRequest request) {
     _log.finer('Call "deleteTrack"');
     _log.finest(request.toDebugString());
-    final completer = Completer<TimeTrackReply>();
+    final completer = Completer<Empty>();
     _timeTrackings
-        .deleteTrack(id: request.id, trackId: request.trackId)
-        .then((timeTrack) => timeTrack.toReply())
-        .then((value) => completer.complete(value))
+        .deleteTrack(request.id)
+        .then((_) => completer.complete(Empty()))
         .catchError((onError) {
       if (onError is DbException) {
         call.sendTrailers(

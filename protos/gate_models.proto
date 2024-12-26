@@ -4,7 +4,7 @@ import "base_models.proto";
 
 package gate.models;
 
-message AddTimeTrackRequest {
+message AddTimeTrackingRequest {
   optional string taskId = 1;
   optional string title = 2;
   optional string description = 3;

@@ -56,7 +56,7 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
   }
 
   @override
-  Future<TimeTrackingModel?> getTimeTrack(String id) =>
+  Future<TimeTrackingModel?> getTimeTracking(String id) =>
       _getBox<TimeTrackingEntity>()
           .then((box) => box.get(id))
           .then((timeTrack) {
@@ -64,96 +64,121 @@ class DataBaseRepositoryImpl implements DataBaseRepository {
         if (timeTrack.trackIds.isEmpty) {
           return timeTrack.toModel();
         }
-        return _getBox<TrackEntity>()
-            .then((value) => value.values.where((element) =>
-                timeTrack.trackIds.contains(element.key.toString())))
-            .then((value) =>
-                timeTrack.toModel(value.sortedBy((element) => element.start)));
+        return getTracksByTimeTrackingId(id).then((value) =>
+            timeTrack.toModel(value.sortedBy((element) => element.start)));
       });
 
   @override
-  Future<PaginationModel<TimeTrackingModel>> getTimeTracksByUserId({
-    required String userId,
-    int? offset,
-    int? limit,
-    DateTime? start,
-    DateTime? end,
-    String? search,
-  }) =>
+  Future<PaginationModel<TimeTrackingModel>> getTimeTrackingsByUserId(
+          {required String userId,
+          int? offset,
+          int? limit,
+          DateTime? start,
+          DateTime? end,
+          String? search}) =>
       _getBox<TimeTrackingEntity>()
           .then((box) {
             return box.values.where((element) =>
                 element.userId == userId &&
-                ((search != null && search.isNotEmpty)
+                ((search != null && search.trim().isNotEmpty)
                     ? ((element.title?.contains(search) ?? true) ||
                         (element.description?.contains(search) ?? true))
                     : true));
           })
+          .then((timeTrackings) {
+            final timeTrackingIds = timeTrackings.map((e) => e.key.toString());
+            return _getBox<TrackEntity>()
+                .then((value) => value.values.where((element) {
+                      final hasTimeTrakings =
+                          timeTrackingIds.contains(element.timeTrackingId);
+                      if (start == null && end == null) return hasTimeTrakings;
+                      final condition = start != null && end != null
+                          ? ((element.start == start ||
+                                      element.start.isAfter(start)) &&
+                                  (element.end == null ||
+                                      element.end == end ||
+                                      element.start.isBefore(end))) &&
+                              (element.end == null ||
+                                  element.end == end ||
+                                  element.end!.isBefore(end))
+                          : start != null
+                              ? element.start == start ||
+                                  element.start.isAfter(start)
+                              : element.end == null ||
+                                  element.end == end ||
+                                  element.end!.isBefore(end!);
+                      return hasTimeTrakings && condition;
+                    }))
+                .then((tracks) => timeTrackings
+                    .map((e) => e.toModel(tracks
+                        .where((element) =>
+                            element.timeTrackingId == e.key.toString())
+                        .map((e) => e.toModel())
+                        .sortedBy((element) => element.start)))
+                    .where((element) => (start != null || end != null)
+                        ? element.tracks.isNotEmpty
+                        : true)
+                    .sortedBy((element) =>
+                        element.tracks.map((p0) => p0.start).maxOrNull ??
+                        DateTime.now().toUtc()));
+          })
           .then((value) => value.skip(offset ?? 0))
           .then((value) => value.take(limit ?? value.length))
-          .then((timeTracks) async {
-            final tracksIds = timeTracks
-                .map((e) => e.trackIds)
-                .expand((element) => element)
-                .toSet();
-            if (tracksIds.isEmpty) {
-              return PaginationModel(
-                  count: timeTracks.length,
-                  offset: offset,
-                  limit: limit,
-                  items: timeTracks.map((e) => e.toModel()).toList());
-            }
-            return _getBox<TrackEntity>()
-                .then((value) => value.values.where(
-                    (element) => tracksIds.contains(element.key.toString())))
-                .then((tracks) => PaginationModel(
-                    count: timeTracks.length,
-                    offset: offset,
-                    limit: limit,
-                    items: timeTracks
-                        .map((e) => e.toModel(tracks
-                            .where((element) =>
-                                e.trackIds.contains(element.key.toString()))
-                            .sortedBy((element) => element.start)))
-                        .toList()));
-          });
+          .then((timeTrackings) => PaginationModel(
+              count: timeTrackings.length,
+              offset: offset,
+              limit: limit,
+              items: timeTrackings.toList()));
 
   @override
   Future<TimeTrackingModel> putTimeTrack(TimeTrackingModel timeTrack) {
     final id = timeTrack.id ?? Uuid().v1();
     return _getBox<TimeTrackingEntity>()
         .then((box) => box.put(id, TimeTrackingEntity.fromModel(timeTrack)))
-        .then((_) => Future.wait(List.generate(timeTrack.tracks.length,
-            (index) => putTrack(timeTrack.tracks[index]))))
-        .then((_) => timeTrack.rebuild((p0) => p0..id = id));
+        .then((tracks) => timeTrack.rebuild((p0) => p0..id = id));
   }
 
   @override
-  Future<void> deleteTimeTrack(String id) => getTimeTrack(id).then((value) {
-        if (value != null) {
-          final trakIds = value.tracks
-              .map((p0) => p0.id)
-              .where((p0) => p0 != null)
-              .cast<String>()
-              .toList();
-          return Future.wait(List.generate(
-                  trakIds.length, (index) => deleteTrack(trakIds[index])))
-              .then((_) =>
-                  _getBox<TimeTrackingEntity>().then((box) => box.delete(id)));
-        }
-      });
+  Future<void> deleteTimeTrack(String id) => getTimeTracking(id)
+      .then((_) => _getBox<TimeTrackingEntity>().then((box) => box.delete(id)));
 
   @override
-  Future<void> putTrack(TrackModel track) {
+  Future<List<TrackModel>> getTracksByTimeTrackingId(String timeTrackingId) =>
+      _getBox<TrackEntity>()
+          .then((box) => box.values
+              .where((element) => element.timeTrackingId == timeTrackingId))
+          .then((value) => value
+              .map((e) => e.toModel())
+              .sortedBy((element) => element.start));
+
+  @override
+  Future<TrackModel?> getTrack(String id) => _getBox<TrackEntity>()
+      .then((value) => value.get(id))
+      .then((value) => value?.toModel());
+
+  @override
+  Future<TrackModel> putTrack(
+      {required String userId,
+      required String timeTrackingId,
+      required TrackModel track}) {
     final id = track.id ?? Uuid().v1();
     return _getBox<TrackEntity>()
-        .then((box) => box.put(id, TrackEntity.fromModel(track)))
+        .then((box) =>
+            box.put(id, TrackEntity.fromModel(userId, timeTrackingId, track)))
         .then((_) => track.rebuild((p0) => p0..id = id));
   }
 
   @override
-  Future<void> deleteTrack(String id) =>
-      _getBox<TrackEntity>().then((box) => box.delete(id));
+  Future<void> deleteTrack(String id) => _getBox<TrackEntity>()
+      .then((value) => value.get(id))
+      .then((track) => track != null
+          ? _getBox<TimeTrackingEntity>()
+              .then((box) => box.get(track.timeTrackingId))
+              .then((value) {
+              value?.trackIds.removeWhere((element) => element == id);
+              return value?.save();
+            }).then((_) => track.delete())
+          : Future.value());
 
   @override
   @disposeMethod
