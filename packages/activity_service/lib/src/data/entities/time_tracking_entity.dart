@@ -30,29 +30,40 @@ class TimeTrackingEntity with HiveObjectMixin, EquatableMixin {
   });
 
   TimeTrackingModel toModel([List<TrackModel> tracks = const <TrackModel>[]]) =>
-      TimeTrackingModel((p0) => p0
-        ..id = key.toString()
-        ..userId = userId
-        ..taskId = taskId
-        ..title = title
-        ..description = description
-        ..tracks = ListBuilder(tracks));
+      TimeTrackingModel(
+        (p0) =>
+            p0
+              ..id = key.toString()
+              ..userId = userId
+              ..taskId = taskId
+              ..title = title
+              ..description = description
+              ..tracks = ListBuilder(tracks),
+      );
 
   factory TimeTrackingEntity.fromModel(TimeTrackingModel model) {
     final timeTrack = TimeTrackingEntity(
-        userId: model.userId,
-        taskId: model.taskId,
-        title: model.title,
-        description: model.description,
-        trackIds: model.tracks
-            .map((p0) => p0.id)
-            .where((element) => element != null)
-            .cast<String>()
-            .toSet());
+      userId: model.userId,
+      taskId: model.taskId,
+      title: model.title,
+      description: model.description,
+      trackIds:
+          model.tracks
+              .map((p0) => p0.id)
+              .where((element) => element != null)
+              .cast<String>()
+              .toSet(),
+    );
     return timeTrack;
   }
 
   @override
-  List<Object?> get props =>
-      [key, userId, taskId, title, description, trackIds];
+  List<Object?> get props => [
+    key,
+    userId,
+    taskId,
+    title,
+    description,
+    trackIds,
+  ];
 }

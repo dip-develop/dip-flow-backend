@@ -22,148 +22,187 @@ class TimeTrackingService extends TimeTrackingServiceBase {
 
   @override
   Future<TimeTrackingReply> getTimeTracking(
-      ServiceCall call, IdRequest request) {
+    ServiceCall call,
+    IdRequest request,
+  ) {
     _log.finer('Call "getTimeTrack"');
     _log.finest(request.toDebugString());
     final completer = Completer<TimeTrackingReply>();
     _timeTrackings
-        .getTimeTracking(
-          request.id,
-        )
-        .then((timeTrack) => TimeTrackingReply(
+        .getTimeTracking(request.id)
+        .then(
+          (timeTrack) => TimeTrackingReply(
             id: timeTrack.id,
             userId: timeTrack.userId,
             taskId: timeTrack.taskId,
             title: timeTrack.title,
             description: timeTrack.description,
-            tracks: timeTrack.tracks.map((p0) => TrackReply(
+            tracks: timeTrack.tracks.map(
+              (p0) => TrackReply(
                 id: p0.id,
                 start: Timestamp.fromDateTime(p0.start),
-                end: p0.end != null ? Timestamp.fromDateTime(p0.end!) : null))))
+                end: p0.end != null ? Timestamp.fromDateTime(p0.end!) : null,
+              ),
+            ),
+          ),
+        )
         .then((value) => completer.complete(value))
         .catchError((onError) {
-      if (onError is DbException) {
-        call.sendTrailers(
-            status: StatusCode.notFound, message: onError.message);
-      } else {
-        call.sendTrailers(status: StatusCode.unknown);
-      }
-      completer.completeError(onError);
-    });
+          if (onError is DbException) {
+            call.sendTrailers(
+              status: StatusCode.notFound,
+              message: onError.message,
+            );
+          } else {
+            call.sendTrailers(status: StatusCode.unknown);
+          }
+          completer.completeError(onError);
+        });
     return completer.future;
   }
 
   @override
   Future<TimeTrackingsReply> getTimeTrackings(
-      ServiceCall call, FilterRequest request) {
+    ServiceCall call,
+    FilterRequest request,
+  ) {
     _log.finer('Call "getTimeTracks"');
     _log.finest(request.toDebugString());
     final completer = Completer<TimeTrackingsReply>();
     _timeTrackings
         .getTimeTrackings(
-            userId: request.userId,
-            offset: request.pagination.hasOffset()
-                ? request.pagination.offset
-                : null,
-            limit:
-                request.pagination.hasLimit() ? request.pagination.limit : null,
-            start: request.dateRange.hasStart()
-                ? request.dateRange.start.toDateTime()
-                : null,
-            end: request.dateRange.hasEnd()
-                ? request.dateRange.end.toDateTime()
-                : null,
-            search: request.search.hasSearch() ? request.search.search : null)
-        .then((timeTracks) => TimeTrackingsReply(
+          userId: request.userId,
+          offset:
+              request.pagination.hasOffset() ? request.pagination.offset : null,
+          limit:
+              request.pagination.hasLimit() ? request.pagination.limit : null,
+          start:
+              request.dateRange.hasStart()
+                  ? request.dateRange.start.toDateTime()
+                  : null,
+          end:
+              request.dateRange.hasEnd()
+                  ? request.dateRange.end.toDateTime()
+                  : null,
+          search: request.search.hasSearch() ? request.search.search : null,
+        )
+        .then(
+          (timeTracks) => TimeTrackingsReply(
             count: timeTracks.count,
             limit: timeTracks.limit,
             offset: timeTracks.offset,
-            timeTracks: timeTracks.items.map((timeTrack) => TimeTrackingReply(
+            timeTracks: timeTracks.items.map(
+              (timeTrack) => TimeTrackingReply(
                 id: timeTrack.id,
                 userId: timeTrack.userId,
                 taskId: timeTrack.taskId,
                 title: timeTrack.title,
                 description: timeTrack.description,
-                tracks: timeTrack.tracks.map((p0) => TrackReply(
+                tracks: timeTrack.tracks.map(
+                  (p0) => TrackReply(
                     id: p0.id,
                     start: Timestamp.fromDateTime(p0.start),
-                    end: p0.end != null
-                        ? Timestamp.fromDateTime(p0.end!)
-                        : null))))))
+                    end:
+                        p0.end != null ? Timestamp.fromDateTime(p0.end!) : null,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        )
         .then((value) => completer.complete(value))
         .catchError((onError) {
-      if (onError is DbException) {
-        call.sendTrailers(
-            status: StatusCode.notFound, message: onError.message);
-      } else {
-        call.sendTrailers(status: StatusCode.unknown);
-      }
-      completer.completeError(onError);
-    });
+          if (onError is DbException) {
+            call.sendTrailers(
+              status: StatusCode.notFound,
+              message: onError.message,
+            );
+          } else {
+            call.sendTrailers(status: StatusCode.unknown);
+          }
+          completer.completeError(onError);
+        });
 
     return completer.future;
   }
 
   @override
   Future<TimeTrackingReply> addTimeTracking(
-      ServiceCall call, AddTimeTrackingRequest request) {
+    ServiceCall call,
+    AddTimeTrackingRequest request,
+  ) {
     _log.finer('Call "addTimeTrack"');
     _log.finest(request.toDebugString());
     final completer = Completer<TimeTrackingReply>();
     _timeTrackings
         .addTimeTracking(
-            userId: request.userId,
-            taskId: request.taskId,
-            title: request.title,
-            description: request.description)
+          userId: request.userId,
+          taskId: request.taskId,
+          title: request.title,
+          description: request.description,
+        )
         .then((timeTrack) {
-      completer.complete(TimeTrackingReply(
-          id: timeTrack.id,
-          userId: timeTrack.userId,
-          taskId: timeTrack.taskId,
-          title: timeTrack.title,
-          description: timeTrack.description,
-          tracks: timeTrack.tracks.map((p0) => TrackReply(
-              id: p0.id,
-              start: Timestamp.fromDateTime(p0.start),
-              end: p0.end != null ? Timestamp.fromDateTime(p0.end!) : null))));
-    }).catchError((onError) {
-      if (onError is DbException) {
-        call.sendTrailers(
-            status: StatusCode.notFound, message: onError.message);
-      } else {
-        call.sendTrailers(status: StatusCode.unknown);
-      }
-      completer.completeError(onError);
-    });
+          completer.complete(
+            TimeTrackingReply(
+              id: timeTrack.id,
+              userId: timeTrack.userId,
+              taskId: timeTrack.taskId,
+              title: timeTrack.title,
+              description: timeTrack.description,
+              tracks: timeTrack.tracks.map(
+                (p0) => TrackReply(
+                  id: p0.id,
+                  start: Timestamp.fromDateTime(p0.start),
+                  end: p0.end != null ? Timestamp.fromDateTime(p0.end!) : null,
+                ),
+              ),
+            ),
+          );
+        })
+        .catchError((onError) {
+          if (onError is DbException) {
+            call.sendTrailers(
+              status: StatusCode.notFound,
+              message: onError.message,
+            );
+          } else {
+            call.sendTrailers(status: StatusCode.unknown);
+          }
+          completer.completeError(onError);
+        });
 
     return completer.future;
   }
 
   @override
   Future<TimeTrackingReply> updateTimeTracking(
-      ServiceCall call, UpdateTimeTrackingRequest request) {
+    ServiceCall call,
+    UpdateTimeTrackingRequest request,
+  ) {
     _log.finer('Call "updateTimeTrack"');
     _log.finest(request.toDebugString());
     final completer = Completer<TimeTrackingReply>();
     _timeTrackings
         .updateTimeTracking(
-      id: request.id,
-      taskId: request.taskId,
-      title: request.title,
-      description: request.description,
-    )
+          id: request.id,
+          taskId: request.taskId,
+          title: request.title,
+          description: request.description,
+        )
         .then((timeTrack) {
-      completer.complete(timeTrack.toReply());
-    }).catchError((onError) {
-      if (onError is DbException) {
-        call.sendTrailers(
-            status: StatusCode.notFound, message: onError.message);
-      } else {
-        call.sendTrailers(status: StatusCode.unknown);
-      }
-      completer.completeError(onError);
-    });
+          completer.complete(timeTrack.toReply());
+        })
+        .catchError((onError) {
+          if (onError is DbException) {
+            call.sendTrailers(
+              status: StatusCode.notFound,
+              message: onError.message,
+            );
+          } else {
+            call.sendTrailers(status: StatusCode.unknown);
+          }
+          completer.completeError(onError);
+        });
 
     return completer.future;
   }
@@ -177,14 +216,16 @@ class TimeTrackingService extends TimeTrackingServiceBase {
         .deleteTimeTracking(request.id)
         .then((_) => completer.complete(Empty()))
         .catchError((onError) {
-      if (onError is DbException) {
-        call.sendTrailers(
-            status: StatusCode.notFound, message: onError.message);
-      } else {
-        call.sendTrailers(status: StatusCode.unknown);
-      }
-      completer.completeError(onError);
-    });
+          if (onError is DbException) {
+            call.sendTrailers(
+              status: StatusCode.notFound,
+              message: onError.message,
+            );
+          } else {
+            call.sendTrailers(status: StatusCode.unknown);
+          }
+          completer.completeError(onError);
+        });
     return completer.future;
   }
 
@@ -202,20 +243,20 @@ class TimeTrackingService extends TimeTrackingServiceBase {
     _log.finest(request.toDebugString());
     final completer = Completer<TimeTrackingReply>();
     _timeTrackings
-        .startTimeTracking(
-          request.id,
-        )
+        .startTimeTracking(request.id)
         .then((timeTrack) => timeTrack.toReply())
         .then((value) => completer.complete(value))
         .catchError((onError) {
-      if (onError is DbException) {
-        call.sendTrailers(
-            status: StatusCode.notFound, message: onError.message);
-      } else {
-        call.sendTrailers(status: StatusCode.unknown);
-      }
-      completer.completeError(onError);
-    });
+          if (onError is DbException) {
+            call.sendTrailers(
+              status: StatusCode.notFound,
+              message: onError.message,
+            );
+          } else {
+            call.sendTrailers(status: StatusCode.unknown);
+          }
+          completer.completeError(onError);
+        });
     return completer.future;
   }
 
@@ -225,20 +266,20 @@ class TimeTrackingService extends TimeTrackingServiceBase {
     _log.finest(request.toDebugString());
     final completer = Completer<TimeTrackingReply>();
     _timeTrackings
-        .stopTimeTracking(
-          request.id,
-        )
+        .stopTimeTracking(request.id)
         .then((timeTrack) => timeTrack.toReply())
         .then((value) => completer.complete(value))
         .catchError((onError) {
-      if (onError is DbException) {
-        call.sendTrailers(
-            status: StatusCode.notFound, message: onError.message);
-      } else {
-        call.sendTrailers(status: StatusCode.unknown);
-      }
-      completer.completeError(onError);
-    });
+          if (onError is DbException) {
+            call.sendTrailers(
+              status: StatusCode.notFound,
+              message: onError.message,
+            );
+          } else {
+            call.sendTrailers(status: StatusCode.unknown);
+          }
+          completer.completeError(onError);
+        });
     return completer.future;
   }
 
@@ -251,14 +292,16 @@ class TimeTrackingService extends TimeTrackingServiceBase {
         .deleteTrack(request.id)
         .then((_) => completer.complete(Empty()))
         .catchError((onError) {
-      if (onError is DbException) {
-        call.sendTrailers(
-            status: StatusCode.notFound, message: onError.message);
-      } else {
-        call.sendTrailers(status: StatusCode.unknown);
-      }
-      completer.completeError(onError);
-    });
+          if (onError is DbException) {
+            call.sendTrailers(
+              status: StatusCode.notFound,
+              message: onError.message,
+            );
+          } else {
+            call.sendTrailers(status: StatusCode.unknown);
+          }
+          completer.completeError(onError);
+        });
     return completer.future;
   }
 }
