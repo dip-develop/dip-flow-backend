@@ -8,7 +8,7 @@ description: |
   Join DIP Flow today and take your team to the next level.
 version: 1.0.0
 publish_to: none
-resolution: workspace
+resolution: null
 
 environment:
   sdk: ^3.7.0
