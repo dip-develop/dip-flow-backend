@@ -11,6 +11,7 @@ Install [Protocol Buffers](https://github.com/protocolbuffers/protobuf/releases)
 ```bash
 dart pub global activate mono_repo
 dart pub global activate melos
+git submodule update --init --recursive
 ```
 
 ## Quick start
