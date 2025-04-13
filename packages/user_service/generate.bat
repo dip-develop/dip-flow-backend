@@ -1,8 +1,8 @@
 @echo off
 
-dart "pub" "global" "activate" "protoc_plugin"
-dart "pub" "get"
-dart "pub" "upgrade"
+cmd /c dart "pub" "get"
+cmd /c dart "pub" "upgrade"
+cmd /c dart "pub" "global" "activate" "protoc_plugin"
 mkdir "lib\src\generated"
-protoc "--dart_out=grpc:lib\src\generated" "-Iprotos" "protos\base_models.proto" "protos\auth_service.proto" "protos\auth_models.proto" "protos\user_service.proto" "protos\user_models.proto" "protos\google\api\annotations.proto" "protos\google\api\http.proto" "protos\google\protobuf\struct.proto" "protos\google\protobuf\descriptor.proto" "protos\google\protobuf\empty.proto" "protos\google\protobuf\timestamp.proto"
-dart "run" "build_runner" "build" "-d"
+cmd /c protoc "--proto_path=protos/" "--dart_out=grpc:lib/src/generated" "-Iprotos" "base_models.proto" "auth_service.proto" "auth_models.proto" "user_service.proto" "user_models.proto" "google/protobuf/empty.proto" "google/protobuf/timestamp.proto"
+cmd /c dart "run" "build_runner" "build" "-d"

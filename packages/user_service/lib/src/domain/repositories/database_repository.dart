@@ -1,23 +1,23 @@
 import '../models/models.dart';
 
 abstract class DataBaseRepository {
-  Future<void> init();
+  void init();
   bool get isInneted;
   Future<ProfileModel> putProfile(ProfileModel profile);
-  Future<ProfileModel?> getProfile(int id);
-  Future<void> deleteProfile(int id);
+  Future<ProfileModel?> getProfile(String id);
+  Future<void> deleteProfile(String id);
 
   Future<SessionModel> putSession(SessionModel session);
-  Future<SessionModel?> getSession(int id);
-  Future<List<SessionModel>> getSessionsBy(int profileId, String deviceId);
+  Future<SessionModel?> getSession(String id);
+  Future<List<SessionModel>> getSessionsBy(String profileId, String deviceId);
   Future<List<SessionModel>> getExpiredSessions();
-  Future<void> deleteSession(int id);
-  Future<void> deleteSessions(List<int> ids);
+  Future<void> deleteSession(String id);
+  Future<void> deleteSessions(List<String> ids);
 
   Future<EmailAuthModel> putEmailAuth(EmailAuthModel auth);
-  Future<EmailAuthModel?> getEmailAuth(int id);
+  Future<EmailAuthModel?> getEmailAuth(String id);
   Future<EmailAuthModel?> getAuthByEmail(String email);
-  Future<void> deleteEmailAuth(int id);
+  Future<void> deleteEmailAuth(String id);
 
-  void dispose();
+  Future<void> dispose();
 }

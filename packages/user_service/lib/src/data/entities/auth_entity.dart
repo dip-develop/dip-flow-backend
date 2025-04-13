@@ -1,24 +1,31 @@
-import 'package:isar/isar.dart';
+// ignore_for_file: must_be_immutable
+
+import 'package:equatable/equatable.dart';
+import 'package:hive_ce/hive.dart';
 
 import '../../domain/models/models.dart';
 
 part 'auth_entity.g.dart';
 
-@collection
-class EmailAuthEntity implements AuthEntity {
-  @Id()
+@HiveType(typeId: 0)
+class EmailAuthEntity
+    with HiveObjectMixin, EquatableMixin
+    implements AuthEntity {
+  @HiveField(0)
   @override
-  int id;
-  //final user = ToOne<ProfileEntity>();
-  @Index()
+  String userId;
+  @HiveField(1)
   final String email;
+  @HiveField(2)
   final String password;
+  @HiveField(3)
   final bool isVerified;
+  @HiveField(4)
   @override
   final DateTime dateCreated;
 
   EmailAuthEntity({
-    this.id = 0,
+    required this.userId,
     required this.email,
     required this.password,
     required this.isVerified,
@@ -26,45 +33,53 @@ class EmailAuthEntity implements AuthEntity {
   });
 
   EmailAuthModel toModel() => EmailAuthModel((p0) => p0
-    ..id = id
-    //..userId = user.targetId
+    ..id = key.toString()
+    ..userId = userId
     ..email = email
     ..password = password
     ..dateCreated = dateCreated);
 
   factory EmailAuthEntity.fromModel(EmailAuthModel model) => EmailAuthEntity(
-        id: model.id ?? 0,
+        userId: model.userId,
         email: model.email,
         password: model.password,
         isVerified: model.isVerified,
         dateCreated: model.dateCreated,
-      ) /* ..user.targetId = model.userId */;
+      );
+
+  @override
+  List<Object?> get props => [key, userId, password, isVerified, dateCreated];
 }
 
-@collection
-class OpenAuthEntity implements AuthEntity {
-  @Id()
+@HiveType(typeId: 1)
+class OpenAuthEntity
+    with HiveObjectMixin, EquatableMixin
+    implements AuthEntity {
+  @HiveField(0)
   @override
-  int id;
-  //final user = ToOne<ProfileEntity>();
-  @Index()
+  String userId;
+  @HiveField(1)
   final String identifier;
+  @HiveField(2)
   @override
   final DateTime dateCreated;
 
   OpenAuthEntity({
-    this.id = 0,
+    required this.userId,
     required this.identifier,
     required this.dateCreated,
   });
+
+  @override
+  List<Object?> get props => [key, userId, identifier, dateCreated];
 }
 
 abstract class AuthEntity {
-  final int id;
+  final String userId;
   final DateTime dateCreated;
 
   const AuthEntity({
-    this.id = 0,
+    required this.userId,
     required this.dateCreated,
   });
 }

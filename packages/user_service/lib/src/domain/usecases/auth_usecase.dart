@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
 import '../exceptions/exceptions.dart';
 import '../interfaces/interfaces.dart';
@@ -16,28 +17,33 @@ const _issuer = 'user_service';
 
 @Singleton(as: AuthUseCase)
 class AuthUseCaseImpl implements AuthUseCase {
+  final _log = Logger('AuthUseCaseImpl');
+
   final DataBaseRepository _dataBaseRepository;
   final EmailRepository _emailRepository;
 
-  const AuthUseCaseImpl(this._dataBaseRepository, this._emailRepository);
+  AuthUseCaseImpl(this._dataBaseRepository, this._emailRepository);
 
   @override
   Future<SessionModel> refreshToken(String token) {
     final jwt = _parseToken(token, _secretRefreshJWT);
-    final sessionID = int.tryParse(jwt?.jwtId ?? '');
+    final sessionID = jwt?.jwtId;
     if (sessionID == null) {
       throw AuthException.wrongAuthData();
     }
-    return _dataBaseRepository
-        .getSession(sessionID)
-        .then((session) => _dataBaseRepository.putSession(SessionModel(
-              (p0) => p0
-                ..id = session?.id
-                ..userId = session?.userId
-                ..deviceId = session?.deviceId
-                ..dateCreated = DateTime.now().toUtc()
-                ..dateExpired = DateTime.now().add(Duration(days: 7)).toUtc(),
-            )));
+    return _dataBaseRepository.getSession(sessionID).then((session) {
+      if (session == null) {
+        throw AuthException.wrongAuthData();
+      }
+      return _dataBaseRepository.putSession(SessionModel(
+        (p0) => p0
+          ..id = session.id
+          ..userId = session.userId
+          ..deviceId = session.deviceId
+          ..dateCreated = DateTime.now().toUtc()
+          ..dateExpired = DateTime.now().add(Duration(days: 7)).toUtc(),
+      ));
+    });
   }
 
   @override
@@ -143,20 +149,20 @@ class AuthUseCaseImpl implements AuthUseCase {
   void _verifyEmail(String email) {
     _emailRepository.sendMail(
         recipients: [email],
-        subject: 'Collabster account verification',
+        subject: 'DIP Flow account verification',
         html:
-            '<a href="https://collabster.run">Confirm email</a>').catchError(
+            '<a href="https://flow.dip.dev">Confirm email</a>').catchError(
         (onError) {
-      print(onError.toString());
+      _log.warning(onError.toString());
     });
   }
 
   @override
-  int? getUserId(String token) {
+  String? getUserId(String token) {
     final jwt = _parseToken(token, _secretAccessJWT);
     final payload = jwt?.payload;
     if (payload != null && payload is Map && payload.containsKey('user')) {
-      return int.tryParse(payload['user'] ?? '');
+      return payload['user'];
     } else {
       return null;
     }
@@ -165,18 +171,18 @@ class AuthUseCaseImpl implements AuthUseCase {
   String _generateToken(
       {required DateTime dateCreated,
       required DateTime dateExpired,
-      required int jwtId,
-      required int userId,
+      required String jwtId,
+      required String userId,
       required String secret}) {
     final jwt = JWT(
       {
         'iat': dateCreated.millisecondsSinceEpoch ~/ 1000,
         'exp': dateExpired.millisecondsSinceEpoch ~/ 1000,
         'nbf': dateCreated.millisecondsSinceEpoch ~/ 1000,
-        'user': userId.toString(),
+        'user': userId,
       },
       issuer: _issuer,
-      jwtId: jwtId.toString(),
+      jwtId: jwtId,
     );
 
     return jwt.sign(SecretKey(secret), noIssueAt: false);

@@ -1,48 +1,69 @@
-import 'package:isar/isar.dart';
+// ignore_for_file: must_be_immutable
+
+import 'package:built_collection/built_collection.dart';
+import 'package:equatable/equatable.dart';
+import 'package:hive_ce/hive.dart';
 
 import '../../domain/models/models.dart';
 
 part 'time_tracking_entity.g.dart';
 
-@collection
-class TimeTrackingEntity {
-  @Id()
-  int id;
-  final int userId;
-  @Index()
-  final int? taskId;
-  @Index()
+@HiveType(typeId: 0)
+class TimeTrackingEntity with HiveObjectMixin, EquatableMixin {
+  @HiveField(0)
+  final String userId;
+  @HiveField(1)
+  final String? taskId;
+  @HiveField(2)
   final String? title;
-  @Index()
+  @HiveField(3)
   final String? description;
-  //final tracks = ToMany<TrackEntity>();
+  @HiveField(4)
+  final Set<String> trackIds;
 
   TimeTrackingEntity({
-    this.id = 0,
     required this.userId,
     this.taskId,
     this.title,
     this.description,
+    required this.trackIds,
   });
 
-  TimeTrackingModel toModel() => TimeTrackingModel((p0) => p0
-    ..id = id
-    ..userId = userId
-    ..taskId = taskId
-    ..title = title
-    ..description =
-        description /*  ..tracks = ListBuilder(tracks.map((element) => element.toModel())) */);
+  TimeTrackingModel toModel([List<TrackModel> tracks = const <TrackModel>[]]) =>
+      TimeTrackingModel(
+        (p0) =>
+            p0
+              ..id = key.toString()
+              ..userId = userId
+              ..taskId = taskId
+              ..title = title
+              ..description = description
+              ..tracks = ListBuilder(tracks),
+      );
 
   factory TimeTrackingEntity.fromModel(TimeTrackingModel model) {
     final timeTrack = TimeTrackingEntity(
-      id: model.id!,
       userId: model.userId,
       taskId: model.taskId,
       title: model.title,
       description: model.description,
+      trackIds:
+          model.tracks
+              .map((p0) => p0.id)
+              .where((element) => element != null)
+              .cast<String>()
+              .toSet(),
     );
-    /* timeTrack.tracks
-        .addAll(model.tracks.map((p0) => TrackEntity.fromModel(p0))); */
     return timeTrack;
   }
+
+  @override
+  List<Object?> get props => [
+    key,
+    userId,
+    taskId,
+    title,
+    description,
+    trackIds,
+  ];
 }

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "time_tracking_models.proto";
+import "base_models.proto";
+
+package time_tracking;
+
+service TimeTrackingService {
+
+  rpc GetTimeTracking(base.models.IdRequest)
+      returns (time_tracking.models.TimeTrackingReply) {}
+
+  rpc GetTimeTrackings(base.models.FilterRequest)
+      returns (time_tracking.models.TimeTrackingsReply) {}
+
+  rpc AddTimeTracking(time_tracking.models.AddTimeTrackingRequest)
+      returns (time_tracking.models.TimeTrackingReply) {}
+
+  rpc UpdateTimeTracking(time_tracking.models.UpdateTimeTrackingRequest)
+      returns (time_tracking.models.TimeTrackingReply) {}
+
+  rpc DeleteTimeTracking(base.models.IdRequest) returns (google.protobuf.Empty) {}
+
+  rpc GetTracks(base.models.FilterRequest)
+      returns (time_tracking.models.TracksReply) {}
+
+  rpc StartTrack(base.models.IdRequest)
+      returns (time_tracking.models.TimeTrackingReply) {}
+
+  rpc StopTrack(base.models.IdRequest)
+      returns (time_tracking.models.TimeTrackingReply) {}
+
+  rpc DeleteTrack(base.models.IdRequest)
+      returns (google.protobuf.Empty) {}
+}

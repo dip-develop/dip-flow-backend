@@ -1,25 +1,26 @@
 name: gateway_service
-summary: "Collabster: a tool for modern teams."
+summary: "DIP Flow: a tool for modern teams."
 description: |
-  Collabster is the ultimate solution for team management.
+  DIP Flow is the ultimate solution for team management.
   Whether you are a freelancer, a developer, an HR manager, or a headhunter, you can benefit from our powerful and user-friendly application that lets you track time, create reports, manage projects, and more.
   You can access our service from any device and any operating system, and enjoy our beautiful graphs that visualize your progress and performance.
   Plus, if you are an individual user or a small team, you can use our service for free forever. No hidden fees, no strings attached.
-  Join Collabster today and take your team to the next level.
+  Join DIP Flow today and take your team to the next level.
 version: 1.0.0
 publish_to: none
 resolution: workspace
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.7.0
 
 dependencies:
   grpc: ^4.0.1
   get_it: ^8.0.3
   injectable: ^2.5.0
+  logging: ^1.3.0
 
 dev_dependencies:
   lints: ^5.1.1
-  test: ^1.25.14
-  build_runner: ^2.4.14
-  injectable_generator: ^2.6.2
+  test: ^1.25.15
+  build_runner: ^2.4.15
+  injectable_generator: ^2.7.0

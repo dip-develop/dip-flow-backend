@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:built_collection/built_collection.dart';
 import 'package:grpc/grpc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
 import '../domain/exceptions/exceptions.dart';
 import '../domain/interfaces/interfaces.dart';
@@ -14,6 +15,7 @@ import 'utils.dart';
 
 @singleton
 class UserService extends UserServiceBase {
+  final _log = Logger('UserService');
   final ProfileUseCase _userUseCase;
   final AuthUseCase _authUseCase;
 
@@ -21,6 +23,7 @@ class UserService extends UserServiceBase {
 
   @override
   Future<UserReply> getUser(ServiceCall call, Empty request) {
+    _log.finer('Call "getUser"');
     final completer = Completer<UserReply>();
     final token = Utils.getToken(call);
     final deviceId = Utils.getDeviceId(call);
@@ -53,6 +56,8 @@ class UserService extends UserServiceBase {
 
   @override
   Future<Empty> updateUser(ServiceCall call, UserRequest request) {
+    _log.finer('Call "updateUser"');
+    _log.finest(request.toDebugString());
     final completer = Completer<Empty>();
     final token = Utils.getToken(call);
     final deviceId = Utils.getDeviceId(call);
@@ -92,6 +97,7 @@ class UserService extends UserServiceBase {
 
   @override
   Future<Empty> deleteUser(ServiceCall call, Empty request) {
+    _log.finer('Call "deleteUser"');
     // TODO: implement deleteUser
     throw UnimplementedError();
   }

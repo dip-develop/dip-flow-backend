@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package base.models;
+
+message IdRequest { string id = 1; }
+
+message PaginationRequest {
+  optional uint32 limit = 1;
+  optional uint32 offset = 2;
+}
+
+message SearchRequest { optional string search = 1; }
+
+message DateRangeRequest {
+  optional google.protobuf.Timestamp start = 1;
+  optional google.protobuf.Timestamp end = 2;
+}
+
+message FilterRequest {
+  string userId = 1;
+  optional PaginationRequest pagination = 2;
+  optional SearchRequest search = 3;
+  optional DateRangeRequest dateRange = 4;
+}

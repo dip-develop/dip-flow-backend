@@ -1,6 +1,9 @@
+AUTHORS
+CHANGELOG.md
+CONTRIBUTING.md
+LICENSE
 .gitignore
 .dockerignore
-azure-pipelines.yml
 README.md
 .vscode/
 .env
@@ -15,5 +18,4 @@ README.md
 **/*.lock
 **/*.g.dart
 **/lib/src/generated/
-**/bin/server.config.dart
 **/**.config.dart

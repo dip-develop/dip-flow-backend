@@ -8,9 +8,9 @@ part 'time_tracking_model.g.dart';
 
 abstract class TimeTrackingModel
     implements Built<TimeTrackingModel, TimeTrackingModelBuilder> {
-  int? get id;
-  int get userId;
-  int? get taskId;
+  String? get id;
+  String get userId;
+  String? get taskId;
   String? get title;
   String? get description;
   BuiltList<TrackModel> get tracks;
@@ -19,17 +19,21 @@ abstract class TimeTrackingModel
   factory TimeTrackingModel([void Function(TimeTrackingModelBuilder) updates]) =
       _$TimeTrackingModel;
 
-  TimeTrackReply toReply() => TimeTrackReply(
+  TimeTrackingReply toReply() => TimeTrackingReply(
       id: id,
       userId: userId,
       taskId: taskId,
       title: title,
       description: description,
       tracks: tracks.map((p0) => p0.toReply()));
+
+  @BuiltValueHook(initializeBuilder: true)
+  static void _setDefaults(TimeTrackingModelBuilder b) =>
+      b..tracks = ListBuilder<TrackModel>();
 }
 
 abstract class TrackModel implements Built<TrackModel, TrackModelBuilder> {
-  int? get id;
+  String? get id;
   DateTime get start;
   DateTime? get end;
 

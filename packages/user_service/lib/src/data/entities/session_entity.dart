@@ -1,36 +1,44 @@
-import 'package:isar/isar.dart';
+// ignore_for_file: must_be_immutable
+
+import 'package:hive_ce/hive.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../domain/models/models.dart';
 
 part 'session_entity.g.dart';
 
-@collection
-class SessionEntity {
-  @Id()
-  int id;
-  //final user = ToOne<ProfileEntity>();
+@HiveType(typeId: 3)
+class SessionEntity with HiveObjectMixin, EquatableMixin {
+  @HiveField(0)
+  final String userId;
+  @HiveField(1)
   final String deviceId;
+  @HiveField(2)
   final DateTime dateCreated;
+  @HiveField(3)
   final DateTime dateExpired;
 
   SessionEntity({
-    this.id = 0,
+    required this.userId,
     required this.deviceId,
     required this.dateCreated,
     required this.dateExpired,
   });
 
   SessionModel toModel() => SessionModel((p0) => p0
-    ..id = id
-    //..userId = user.targetId
+    ..id = key.toString()
+    ..userId = userId
     ..deviceId = deviceId
     ..dateCreated = dateCreated
     ..dateExpired = dateExpired);
 
   factory SessionEntity.fromModel(SessionModel model) => SessionEntity(
-        id: model.id ?? 0,
+        userId: model.userId,
         deviceId: model.deviceId,
         dateCreated: model.dateCreated,
         dateExpired: model.dateExpired,
-      ) /* ..user.targetId = model.userId */;
+      );
+
+  @override
+  List<Object?> get props => [key, deviceId, dateCreated, dateExpired];
 }

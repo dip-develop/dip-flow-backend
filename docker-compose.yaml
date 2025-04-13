@@ -1,10 +1,10 @@
-version: '3.5'
+version: "3"
 
 services:
   service_gateway:
     container_name: service_gateway
     ports:
-      - '${GATEWAY_PORT}:${GATEWAY_PORT}'
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
     env_file:
       - .env
     environment:
@@ -15,7 +15,7 @@ services:
       - ACTIVITY_SERVICE_PORT=$ACTIVITY_SERVICE_PORT
     build:
       dockerfile: ./packages/gateway_service/Dockerfile
-      context: '.'
+      context: "."
     restart: always
     networks:
       - network
@@ -31,9 +31,10 @@ services:
       - SMTP_ADDRESS_EMAIL=$SMTP_ADDRESS_EMAIL
       - SMTP_PORT_EMAIL=$SMTP_PORT_EMAIL
       - DB_DIRECTORY=/app/db
+      - DB_UNUSED_CLOSE_PERIOD=10
     build:
       dockerfile: ./packages/user_service/Dockerfile
-      context: '.'
+      context: "."
     volumes:
       - user_db_data:/app/db
     restart: always
@@ -47,9 +48,10 @@ services:
     environment:
       - PORT=$ACTIVITY_SERVICE_PORT
       - DB_DIRECTORY=/app/db
+      - DB_UNUSED_CLOSE_PERIOD=10
     build:
       dockerfile: ./packages/activity_service/Dockerfile
-      context: '.'
+      context: "."
     volumes:
       - service_activity_db_data:/app/db
     restart: always

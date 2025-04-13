@@ -2,29 +2,28 @@ import '../models/models.dart';
 
 abstract class TimeTrackingsUseCase {
   Future<TimeTrackingModel> addTimeTracking({
-    required int userId,
-    int? taskId,
+    required String userId,
+    String? taskId,
     String? title,
     String? description,
   });
   Future<TimeTrackingModel> updateTimeTracking({
-    required int id,
-    int? taskId,
+    required String id,
+    String? taskId,
     String? title,
     String? description,
   });
-  Future<TimeTrackingModel> getTimeTracking(int id);
+  Future<TimeTrackingModel> getTimeTracking(String id);
   Future<PaginationModel<TimeTrackingModel>> getTimeTrackings({
-    required int userId,
+    required String userId,
     int? offset,
     int? limit,
     DateTime? start,
     DateTime? end,
     String? search,
   });
-  Future<void> deleteTimeTracking(int id);
-  Future<TimeTrackingModel> startTrack(int id);
-  Future<TimeTrackingModel> stopTrack(int id);
-  Future<TimeTrackingModel> deleteTrack(
-      {required int id, required int trackId});
+  Future<void> deleteTimeTracking(String id);
+  Future<TimeTrackingModel> startTimeTracking(String id);
+  Future<TimeTrackingModel> stopTimeTracking(String id);
+  Future<void> deleteTrack(String id);
 }

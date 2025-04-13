@@ -2,4 +2,7 @@
 .idea/
 .dart_tool/
 .env
-*.lock
+**.lock
+**.g.yaml
+packages/**/db/
+packages/**/protos/

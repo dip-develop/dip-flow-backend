@@ -1,25 +1,21 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:collection/collection.dart';
+import 'package:injectable/injectable.dart';
 
 import '../exceptions/exceptions.dart';
 import '../interfaces/interfaces.dart';
 import '../models/models.dart';
 import '../repositories/repositories.dart';
 
+@Singleton(as: TimeTrackingsUseCase)
 class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
   final DataBaseRepository _dataBaseRepository;
 
-  TimeTrackingsUseCaseImpl._(this._dataBaseRepository);
-
-  static Future<TimeTrackingsUseCaseImpl> getInstance(
-      DataBaseRepository dataBaseRepository) {
-    return dataBaseRepository
-        .init()
-        .then((_) => TimeTrackingsUseCaseImpl._(dataBaseRepository));
-  }
+  TimeTrackingsUseCaseImpl(this._dataBaseRepository);
 
   @override
-  Future<TimeTrackingModel> getTimeTracking(int id) =>
-      _dataBaseRepository.getTimeTrack(id).then((value) {
+  Future<TimeTrackingModel> getTimeTracking(String id) =>
+      _dataBaseRepository.getTimeTracking(id).then((value) {
         if (value == null) {
           throw DbException.notFound();
         }
@@ -28,131 +24,164 @@ class TimeTrackingsUseCaseImpl implements TimeTrackingsUseCase {
 
   @override
   Future<PaginationModel<TimeTrackingModel>> getTimeTrackings({
-    required int userId,
+    required String userId,
     int? offset,
     int? limit,
     DateTime? start,
     DateTime? end,
     String? search,
-  }) =>
-      _dataBaseRepository
-          .getTimeTracksByUserId(
-            id: userId,
-            offset: offset,
-            limit: limit,
-            start: start,
-            end: end,
-            search: search,
-          )
-          .then((value) => PaginationModel(
-              count: value.count,
-              offset: value.offset,
-              limit: value.limit,
-              items: value.items
-                  .map((e) => e.rebuild((p0) => p0
-                    ..tracks = ListBuilder(p0.tracks.build().where((p0) {
-                      if (start == null && end == null) return true;
-                      final condition = start != null && end != null
-                          ? ((p0.start == start || p0.start.isAfter(start)) &&
-                                  (p0.end == null ||
-                                      p0.end == end ||
-                                      p0.start.isBefore(end))) &&
-                              (p0.end == null ||
-                                  p0.end == end ||
-                                  p0.end!.isBefore(end))
-                          : start != null
-                              ? p0.start == start || p0.start.isAfter(start)
-                              : p0.end == null ||
-                                  p0.end == end ||
-                                  p0.end!.isBefore(end!);
-
-                      return condition;
-                    }))))
-                  .toList()));
+  }) => _dataBaseRepository.getTimeTrackingsByUserId(
+    userId: userId,
+    offset: offset,
+    limit: limit,
+    start: start,
+    end: end,
+    search: search,
+  );
 
   @override
   Future<TimeTrackingModel> addTimeTracking({
-    required int userId,
-    int? taskId,
+    required String userId,
+    String? taskId,
     String? title,
     String? description,
-  }) =>
-      _dataBaseRepository.putTimeTrack(TimeTrackingModel(
-        (p0) => p0
-          ..userId = userId
-          ..taskId = taskId
-          ..title = title
-          ..description = description
-          ..tracks = ListBuilder(List<TrackModel>.empty()),
-      ));
+  }) => _dataBaseRepository.putTimeTrack(
+    TimeTrackingModel(
+      (p0) =>
+          p0
+            ..userId = userId
+            ..taskId = taskId
+            ..title = title
+            ..description = description,
+    ),
+  );
 
   @override
   Future<TimeTrackingModel> updateTimeTracking({
-    required int id,
-    int? taskId,
+    required String id,
+    String? taskId,
     String? title,
     String? description,
     List<TrackModel>? tracks,
-  }) =>
-      getTimeTracking(id).then((timeTrack) {
-        final needDelete = List<Future<void>>.empty(growable: true);
-        if (tracks != null) {
-          final a = timeTrack.tracks
-              .where((p0) => !tracks.any((element) => element.id == p0.id))
-              .map((e) => _dataBaseRepository.deleteTrack(e.id!));
-          needDelete.addAll(a);
-        }
-        return Future.wait(needDelete)
-            .then((_) => Future.wait(List.generate(tracks?.length ?? 0,
-                (index) => _dataBaseRepository.putTrack(tracks![index]))))
-            .then((_) => _dataBaseRepository.putTimeTrack(timeTrack.rebuild(
-                (p0) => p0
-                  ..taskId = taskId ?? p0.taskId
-                  ..title = title ?? p0.title
-                  ..description = description ?? p0.description
-                  ..tracks =
-                      tracks != null ? ListBuilder(tracks) : p0.tracks)));
-      });
+  }) => getTimeTracking(id).then((timeTrack) {
+    final toDelete =
+        tracks != null
+            ? timeTrack.tracks.whereNot(
+              (element) => tracks.any((p0) => element.id == p0.id),
+            )
+            : List<TrackModel>.empty();
+
+    final toUpdate =
+        tracks
+            ?.where((element) => element.id != null)
+            .where(
+              (track) =>
+                  timeTrack.tracks.firstWhereOrNull(
+                    (element) => element.id == track.id,
+                  ) !=
+                  track,
+            ) ??
+        List<TrackModel>.empty();
+
+    final toAdd =
+        tracks?.where((element) => element.id == null) ??
+        List<TrackModel>.empty();
+
+    return Future.wait(
+          [...toUpdate, ...toAdd].map(
+            (e) => _dataBaseRepository.putTrack(
+              userId: timeTrack.userId,
+              timeTrackingId: timeTrack.id!,
+              track: e,
+            ),
+          ),
+        )
+        .then((value) {
+          final updatedTracks =
+              tracks
+                ?..removeWhere(
+                  (track) =>
+                      toDelete.any((element) => element.id == track.id) ||
+                      track.id == null,
+                )
+                ..addAll(
+                  value..removeWhere(
+                    (track) =>
+                        toUpdate.any((element) => element.id == track.id),
+                  ),
+                );
+
+          return _dataBaseRepository.putTimeTrack(
+            timeTrack.rebuild(
+              (p0) =>
+                  p0
+                    ..taskId = taskId ?? p0.taskId
+                    ..title = title ?? p0.title
+                    ..description = description ?? p0.description
+                    ..tracks =
+                        updatedTracks != null
+                            ? ListBuilder(updatedTracks)
+                            : timeTrack.tracks.toBuilder(),
+            ),
+          );
+        })
+        .whenComplete(
+          () => Future.wait(
+            toDelete.map((e) => _dataBaseRepository.deleteTrack(e.id!)),
+          ),
+        );
+  });
 
   @override
-  Future<void> deleteTimeTracking(int id) =>
-      _dataBaseRepository.deleteTimeTrack(id);
+  Future<void> deleteTimeTracking(String id) => _dataBaseRepository
+      .getTracksByTimeTrackingId(id)
+      .then(
+        (value) => Future.wait([
+          ...List.generate(
+            value.length,
+            (index) => _dataBaseRepository.deleteTrack(value[index].id!),
+          ),
+          _dataBaseRepository.deleteTimeTrack(id),
+        ]),
+      );
 
   @override
-  Future<TimeTrackingModel> startTrack(int id) =>
-      stopTrack(id).then((value) => getTimeTracking(id).then((value) {
-            final track =
-                TrackModel((p0) => p0..start = DateTime.now().toUtc());
-            final tracks = List<TrackModel>.from(value.tracks, growable: true);
-            tracks.add(track);
-            return updateTimeTracking(id: id, tracks: tracks);
-          }));
-
-  @override
-  Future<TimeTrackingModel> stopTrack(int id) =>
-      getTimeTracking(id).then((value) {
-        final tracks = List<TrackModel>.from(value.tracks, growable: true);
-        TrackModel? stopedTrack;
-        for (var i = 0; i < tracks.length; i++) {
-          if (tracks[i].end == null) {
-            final track =
-                tracks[i].rebuild((p0) => p0..end = DateTime.now().toUtc());
-            tracks[i] = track;
-            stopedTrack = track;
-          }
-        }
-        if (stopedTrack != null) {
+  Future<TimeTrackingModel> startTimeTracking(String id) =>
+      _stopTimeTracking(id).then(
+        (value) => getTimeTracking(id).then((value) {
+          final track = TrackModel((p0) => p0..start = DateTime.now().toUtc());
+          final tracks = List<TrackModel>.from(value.tracks, growable: true)
+            ..add(track);
           return updateTimeTracking(id: id, tracks: tracks);
-        }
-        return value;
-      });
+        }),
+      );
 
   @override
-  Future<TimeTrackingModel> deleteTrack(
-          {required int id, required int trackId}) =>
-      getTimeTracking(id).then((value) {
-        final tracks = List<TrackModel>.from(value.tracks, growable: true);
-        tracks.removeWhere((element) => element.id == trackId);
-        return updateTimeTracking(id: id, tracks: tracks);
-      });
+  Future<TimeTrackingModel> stopTimeTracking(String id) =>
+      _stopTimeTracking(id).then((_) => getTimeTracking(id));
+
+  Future<void> _stopTimeTracking(String id) => getTimeTracking(id)
+      .then(
+        (timeTracking) =>
+            _dataBaseRepository.getTracksByTimeTrackingId(id).then((value) {
+              final notStoped =
+                  value.where((element) => element.end == null).toList();
+              return Future.wait(
+                List.generate(
+                  notStoped.length,
+                  (index) => _dataBaseRepository.putTrack(
+                    userId: timeTracking.userId,
+                    timeTrackingId: id,
+                    track: notStoped[index].rebuild(
+                      (p0) => p0..end = DateTime.now().toUtc(),
+                    ),
+                  ),
+                ),
+              );
+            }),
+      )
+      .then((_) => Future.value());
+
+  @override
+  Future<void> deleteTrack(String id) => _dataBaseRepository.deleteTrack(id);
 }
