@@ -1,4 +1,4 @@
-name: collabster
+name: dip_flow
 
 packages:
   - packages/**

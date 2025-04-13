@@ -149,9 +149,9 @@ class AuthUseCaseImpl implements AuthUseCase {
   void _verifyEmail(String email) {
     _emailRepository.sendMail(
         recipients: [email],
-        subject: 'Collabster account verification',
+        subject: 'DIP Flow account verification',
         html:
-            '<a href="https://collabster.run">Confirm email</a>').catchError(
+            '<a href="https://flow.dip.dev">Confirm email</a>').catchError(
         (onError) {
       _log.warning(onError.toString());
     });

@@ -1,2 +1,2 @@
-Copyright {{.Year}}, the Collabster project authors.  Please see the AUTHORS file
+Copyright {{.Year}}, the DIP Flow project authors.  Please see the AUTHORS file
 for details. All rights reserved.

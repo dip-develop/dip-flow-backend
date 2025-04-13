@@ -233,8 +233,9 @@ class TimeTrackingService extends TimeTrackingServiceBase {
   Future<TracksReply> getTracks(ServiceCall call, FilterRequest request) {
     _log.finer('Call "getTracks"');
     _log.finest(request.toDebugString());
+    final completer = Completer<TracksReply>();
     // TODO: implement getTracks
-    throw UnimplementedError();
+    return completer.future;
   }
 
   @override
