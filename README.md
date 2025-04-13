@@ -1,16 +1,18 @@
 # DIP Flow - Backend
 
+#### with Micro Service Arhitecture
+
+[![BuyMeACoffee][buy_me_a_coffee_badge]][buy_me_a_coffee]
+
 **DIP Flow** is the ultimate solution for team management. Whether you are a freelancer, a developer, an HR manager, or a headhunter, you can benefit from our powerful and user-friendly application that lets you track time, create reports, manage projects, and more. You can access our service from any device and any operating system, and enjoy our beautiful graphs that visualize your progress and performance. Plus, if you are an individual user or a small team, you can use our service for free forever. No hidden fees, no strings attached. Join **DIP Flow** today and take your team to the next level.
 
-## DIP Flow - Backend with Micro Service Arhitecture
+## Links
 
-### Links
-
-#### [Protos](https://github.com/dip-develop/dip-flow-protos)
-
-#### [WIKI](https://github.com/dip-develop/dip-flow-wiki)
+#### [WIKI](https://github.com/dip-develop/dip-flow)
 
 #### [Frontend](https://github.com/dip-develop/dip-flow-frontend)
+
+#### [Protos](https://github.com/dip-develop/dip-flow-protos)
 
 ### Pre start
 
@@ -34,6 +36,12 @@ Windows
 
 ```bash
 ./generate.bat
+```
+
+### Generate other dart files
+
+```bash
+dart pub run build_runner build -d
 ```
 
 #### VSCode config
@@ -82,5 +90,5 @@ If you fixed a bug or implemented a feature, please send a [pull request][pr].
 
 [buy_me_a_coffee]: https://buymeacoffee.com/dip.dev
 [buy_me_a_coffee_badge]: https://img.buymeacoffee.com/button-api/?text=Donate&emoji=&slug=dip.dev&button_colour=29b6f6&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00
-[issue]: https://github.com/dip-develop/dip-flow-wiki/issues
-[pr]: https://github.com/dip-develop/dip-flow-wiki/pulls
+[issue]: https://github.com/dip-develop/dip-flow-backend/issues
+[pr]: https://github.com/dip-develop/dip-flow-backend/pulls
